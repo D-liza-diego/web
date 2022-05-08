@@ -1,0 +1,237 @@
+﻿@model web.Models.Product
+@{
+    ViewData["Title"] = "Productos";
+}
+<style>
+ table{
+     text-align:center;
+ }
+.r
+{
+    background-color:red;
+   color:red;
+}
+</style>
+ <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar" >CREAR</button>
+ 
+ <table class="table table-bordered table-resposinve-m" id="tabla">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Categoria</th>
+            <th>Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in  ViewBag.lista)
+        {
+            <tr>
+                <td>@item.Nameproduct</td>
+                <td>S/. @item.Precio</td>
+                <td>@item.Cantidad</td>
+                <td>@item.IdcategoriaNavigation.Catname</td> 
+                <td>
+                    <button onclick="mostrar(@item.Idproduct)" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrar">Eliminar </button>
+                    <button idproduct="@item.Idproduct" id="p_editar" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editar">Editar </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+    
+</table>
+
+@*modales*@
+@*editar producto*@
+<div class="modal fade" id="editar" role="dialog">
+    <div class="modal-dialog modal-m modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" id="p-form">
+                 <input id="productID" type="hidden" asp-for="Idproduct"/>
+                <div class="modal-header">
+                    <h2>Editar producto</h2>
+                </div>
+                
+                <div class="modal-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Nameproduct" class="control-label"></label>
+                            <input id="llenar-p-name" asp-for="Nameproduct" class="form-control"/>
+                            <span asp-validation-for="Nameproduct" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Precio" class="control-label"></label>
+                            <input id="llenar-p-precio" asp-for="Precio" class="form-control"/>
+                            <span asp-validation-for="Precio" class="text-danger"></span>
+                        </div>
+                         <div class="form-group">
+                            <label asp-for="Cantidad" class="control-label"></label>
+                            <input  id="llenar-p-cantidad" asp-for="Cantidad" class="form-control"/>
+                            <span asp-validation-for="Cantidad" class="text-danger"></span>
+                        </div>
+
+                         <div class="form-group">
+                            <label asp-for="Idcategoria" class="control-label"></label>
+                            <select id="llenar-p-cat"asp-for="Idcategoria" class="form-control" asp-items="ViewBag.x"></select>
+                            <span asp-validation-for="Idcategoria" class="text-danger"></span>
+                        </div>
+           
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cerrar</button>
+                     <button id ="p_actualizar" type="button" class="btn btn-primary" >Actualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@*añadir producto*@
+<div class="modal fade" id="agregar" role="dialog">
+    <div class="modal-dialog modal-m modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-action="SaveProduct">
+                <div class="modal-header">
+                    <h2>Ingreso</h2>
+                </div>
+                
+                <div class="modal-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Nameproduct" class="control-label"></label>
+                            <input asp-for="Nameproduct" class="form-control"/>
+                            <span asp-validation-for="Nameproduct" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Precio" class="control-label"></label>
+                            <input  asp-for="Precio" class="form-control"/>
+                            <span asp-validation-for="Precio" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Cantidad" class="control-label"></label>
+                            <input  asp-for="Cantidad" class="form-control"/>
+                            <span asp-validation-for="Cantidad" class="text-danger"></span>
+                        </div>
+
+                         <div class="form-group">
+                            <label asp-for="Idcategoria" class="control-label"></label>
+                            <select asp-for="Idcategoria" class="form-control" asp-items="ViewBag.x"></select>
+                            <span asp-validation-for="Idcategoria" class="text-danger"></span>
+                        </div>
+           
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cerrar</button>
+                     <button type="submit" class="btn btn-primary" >Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@*modal eliminar*@
+<div class="modal fade" id="borrar" role="dialog">
+    <div class="modal-dialog modal-m modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post">
+                <div class="modal-header">
+                    <h2>¿Desea eliminar el producto?</h2>
+                </div>
+                    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                     <button  id="borrarpro" type="button" class="btn btn-primary" >Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+ <script src="~/lib/jquery/dist/jquery.min.js"></script>
+ <script>
+      $("#tabla > tbody > tr").each(function(index,tr)
+        {
+        var x= parseInt($(this).find("td:eq(2)").html())
+        if(x<5)
+        {
+            $(this).find("td:eq(2)").addClass('r')
+        }
+        console.log(x)
+        })           
+
+      $(document).on('click','#p_actualizar',function()
+     {
+         var form=$('#p-form').serialize();
+         //var valorneo=$('#llenar').val();
+         console.log($('#p-form').serializeArray());
+         $.ajax({
+             type:"POST",
+             url:'/Product/EditProduct',
+             data:form,
+             success:function(result)
+             {
+                  $('#editar').modal('hide');
+                  window.location.reload();
+             }
+         })
+     })
+
+      $(document).on('click','#p_editar',function()
+     {
+         var idp=$(this).attr('idproduct');
+         $('#productID').val(idp);
+         console.log(idp);
+         $.ajax({
+             type:"Get",
+             url:'/Product/Index',
+             data:{id:idp},
+             success:function(result)
+             {
+                 console.log(result);
+                 $('#llenar-p-name').val(result.nameproduct);
+                 $('#llenar-p-precio').val(result.precio);
+                 $('#llenar-p-cantidad').val(result.cantidad);
+                 $('#llenar-p-cat').val(result.idcategoria);
+             }
+         })
+     })
+
+      function mostrar(id)
+     {
+          $('#productID').val(id);
+     }
+     $(document).on('click','#borrarpro',function()
+     {
+         var valordel=$('#productID').val();
+         $.ajax({
+            type:'POST',
+            url:'/Product/DeleteProduct',
+            data:{id:valordel},
+            success:function(result)
+            {
+                console.log(result);
+                if(result)
+                {
+                    $('#borrar').modal('hide');
+                    window.location.reload();
+                }
+            } 
+         })
+     })
+$(document).ready( function () {
+   $('#tabla').DataTable();
+} );
+ </script>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+   
+} 
+

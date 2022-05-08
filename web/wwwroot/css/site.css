@@ -1,0 +1,41 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+#login {
+    position: absolute;
+    left: 40%;
+    top: 30%;
+    padding: 10px 10px;
+}
+
+#botones {
+    margin-top: 10px;
+}
+#padre {
+    text-align: center;
+}
+#hijo {
+    padding: 15px;
+    margin: 5px;
+    width: 300px;
+    display: inline-block;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}

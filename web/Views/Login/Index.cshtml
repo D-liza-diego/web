@@ -1,0 +1,55 @@
+﻿@model web.Models.Usuario
+@{
+    Layout = null;
+}
+<title>Inicio de sesion</title>
+<head>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/practica.styles.css" asp-append-version="true" />
+</head>
+<style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button{
+        -webkit-appearance:none;
+    }
+</style>
+<div id="login">
+<form method="post" asp-action="Ingresar">
+ <div class="centered">
+     <h2>Ingresar al sistema</h2>
+ </div>
+                
+    <div >
+      <label asp-for="Name" class="control-label"></label>
+      <input id="name" asp-for="Name" class="form-control"/>
+      <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div  >
+      <label asp-for="Dni" class="control-label"></label>
+      <input  id="dni" asp-for="Dni" class="form-control"/>
+      <span asp-validation-for="Dni" class="text-danger"></span>
+     </div>
+           <br /><br />
+     <div >
+      <button id="limpiar" type="button" class="btn btn-danger" >Limpiar</button>
+      <button type="submit" class="btn btn-primary" >Ingresar</button>
+      </div>
+</form>
+ <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).on('click','#limpiar',function()
+    {
+         $("#dni").val('');
+         $("#name").val('');
+    })
+
+</script>
+</div>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+} 

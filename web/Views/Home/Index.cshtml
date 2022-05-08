@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@ViewBag.x</h1>
+   
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+ <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    
+        $.ajax({
+                type:'Get',
+                url:'/Home/Obtener',
+                success:function(result)
+                {
+                console.log(result);
+                } 
+                })
+         
+    
+   
+  
+</script>

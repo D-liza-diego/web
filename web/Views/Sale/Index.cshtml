@@ -1,0 +1,62 @@
+﻿@model Product
+<style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button{
+        -webkit-appearance:none;
+    }
+</style>
+<a asp-controller="Sale" asp-action="llenar" type="button" class="btn btn-primary"  >CREAR</a>
+
+
+<table class="table table-bordered table-resposinve-m">
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Comprobante</th>
+            <th>Operaciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in  ViewBag.datos)
+        {
+           @if(@item.Borrado==true)
+            {
+                 <tr>
+                <td>@item.IdcustomerNavigation.Namecustomer</td>
+                <td>@item.Items</td>
+                <td>@item.Total</td>
+                <td>@item.Comprobante</td>
+                <td>
+                    <buttono id="eliminar" idsale="@item.IdSale" type="button" class="btn btn-danger">Eliminar </buttono>
+                </td>
+                </tr>
+            }
+           
+        }
+    </tbody>
+    
+</table>
+
+ <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script src="sweetalert2.all.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+ $(document).on('click','#eliminar',function()
+ {
+     var id=$(this).attr('idsale');
+     console.log(id)
+    
+     $.ajax({
+              type:"Post",
+              url:"Sale/Eliminar",
+              data:{id:id},
+              success:function(r)
+              {
+                  console.log(r)
+                 window.location.reload();
+              }
+              })
+ })
+</script>

@@ -1,0 +1,357 @@
+﻿@model web.Models.Customer
+@{
+    ViewData["Title"] = "Clientes";
+
+}
+     
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar-c" id="nuevo-cliente" >Registrar nuevo</button>
+<br />
+<br />
+
+@if (Enumerable.Count(ViewBag.customers) > 0)
+{
+    <table class="table table-bordered table-resposinve-m" id="tabla-customer">
+    <thead>
+        <tr>
+            <th>Documento</th>
+            <th>Nombre</th>
+            <th>Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+       @foreach(var item in  ViewBag.customers)
+        {
+            <tr>
+                <td>@item.Dnicustomer</td>
+                <td>@item.Namecustomer</td>
+                <td>
+                    <button idcustomer=@item.Idcustomer id="borrar-customer" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrar">Eliminar </button>
+                    <button idcustomer=@item.Idcustomer id="editar-customer" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editar-c">Editar </button>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>  
+}
+else
+{
+    <h1>No hay datos para mostrar</h1>
+}
+ 
+<div class="modal fade" id="editar-c" role="dialog">
+    <div class="modal-dialog modal-m modal-dialog-centered">
+        <div class="modal-content">
+            
+            <form id="form-update-cliente" method="post" asp-action="UpdateCustomer">
+                <div class="modal-header">
+
+                      <input  type="number" class="form-control" maxlength="8" placeholder="Ingresar dni" id="update-buscar-dni"/>
+                      <button type="button" class="btn btn-primary" id="update-buscar" >Editar</button>
+                      
+                    
+                </div>
+
+                <div class="modal-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                         <div class="form-group">
+                            <label asp-for="Dnicustomer" class="control-label"></label>
+                            <input asp-for="Dnicustomer" class="form-control" id="update-dni" readonly/>
+                            <span asp-validation-for="Dnicustomer" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Namecustomer" class="control-label"></label>
+                            <input asp-for="Namecustomer" class="form-control" id="update-nombre" readonly/>
+                            <span asp-validation-for="Namecustomer" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Lastnamecustomer" class="control-label"></label>
+                            <input  asp-for="Lastnamecustomer" class="form-control" id="update-apellidos" readonly/>
+                            <span asp-validation-for="Lastnamecustomer" class="text-danger"></span>
+                        </div>
+
+                         <div class="form-group">
+                            <label asp-for="Phonecustomer" class="control-label"></label>
+                            <input type="number"  asp-for="Phonecustomer" id="update-telf" class="form-control"/>
+                            <span  asp-validation-for="Phonecustomer" class="text-danger"></span>
+                        </div>
+           
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                     <button type="button" class="btn btn-primary" id="actualizar-cliente"  disabled >Actualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="agregar-c" role="dialog">
+    <div class="modal-dialog modal-m modal-dialog-centered">
+        <div class="modal-content">
+            
+            <form id="formulario" method="post" asp-action="SaveCustomer">
+                <div class="modal-header">
+
+                      <input  type="number" class="form-control" maxlength="8" placeholder="Ingresar dni" id="buscar-dni"/>
+                      <button type="button" class="btn btn-primary" id="buscar-cliente">Buscar</button>
+                      
+                    
+                </div>
+
+                <div class="modal-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                         <div class="form-group">
+                            <label asp-for="Dnicustomer" class="control-label"></label>
+                            <input asp-for="Dnicustomer" class="form-control" id="add-dni" readonly/>
+                            <span asp-validation-for="Dnicustomer" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Namecustomer" class="control-label"></label>
+                            <input asp-for="Namecustomer" class="form-control" id="add-nombre" readonly/>
+                            <span asp-validation-for="Namecustomer" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Lastnamecustomer" class="control-label"></label>
+                            <input  asp-for="Lastnamecustomer" class="form-control" id="add-apellidos" readonly/>
+                            <span asp-validation-for="Lastnamecustomer" class="text-danger"></span>
+                        </div>
+
+                         <div class="form-group">
+                            <label asp-for="Phonecustomer" class="control-label"></label>
+                            <input type="number"  asp-for="Phonecustomer"  id="add-telf"  class="form-control"/>
+                            <span id="span" asp-validation-for="Phonecustomer" class="text-danger"></span>
+                        </div>
+           
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="cancelar">Cancelar</button>
+                     <button type="submit" class="btn btn-primary" id="agregar" disabled >Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="sweetalert2.all.min.js"></script>
+<script>
+     var flag=0  
+     const boton = document.getElementById("agregar");
+     const botonupdate=document.getElementById("actualizar-cliente");
+ function limpiar()
+     {
+        $('#add-buscar-dni').val('');
+        $('#add-dni').val('');
+        $('#add-nombre').val('');
+        $('#add-apellidos').val('');
+        $('#add-telf').val('');
+
+        $('#update-buscar-dni').val('');
+        $('#update-dni').val('');
+        $('#update-nombre').val('');
+        $('#update-apellidos').val('');
+        $('#update-telf').val('');
+        $('#span').html('');
+        boton.setAttribute('disabled',true);
+     }
+ function addbuscar(id,flag)
+     {
+         $.ajax({
+         type:"Get",
+         url:'https://dniruc.apisperu.com/api/v1/dni/'+id+'?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImRpZWdvMDNsaXphQGdtYWlsLmNvbSJ9.YMccp65gLQTDdT-ZQNg4uLBmX66IkI_854e6uC2Lglg',
+         success:function(result)
+         {
+             if(result.success==false)
+             {
+                 Swal.fire({
+                icon: 'error',
+                title: 'Persona no encontrada',
+                showConfirmButton: false,
+                timer: 900
+                        })
+                $('#buscar-dni').val('');
+                $('#buscar-dni').val('');
+                $('#update-dni').val('');
+                $('#update-nombre').val('');
+                $('#update-apellidos').val('');
+                $('#update-telf').val('');
+             }
+             else
+             {
+                 if(flag=1)
+                 {
+                      $('#add-dni').val(result.dni);
+                      $('#add-nombre').val(result.nombres);
+                      $('#add-apellidos').val(result.apellidoPaterno+" "+result.apellidoMaterno);
+                      boton.removeAttribute('disabled'); 
+                 }
+                 if(flag=2)
+                 {
+                     $('#update-dni').val(result.dni);
+                     $('#update-nombre').val(result.nombres);
+                     $('#update-apellidos').val(result.apellidoPaterno+" "+result.apellidoMaterno);
+                     $('#update-telf').val('')
+                     botonupdate.removeAttribute('disabled'); 
+                 }
+            
+             }
+             
+         }
+
+         })
+     }
+ function verificar(id,flag)
+   {
+       if(id.length==8)
+           {
+            $.ajax({
+                type:"GET",
+                url:'/Customer/Verificar',
+                data:{id:id},
+                success:function(result)
+                {
+                    if(result==true)
+                    {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cliente ya registrado',
+                            showConfirmButton: false,
+                            timer: 1000
+                            })
+                            limpiar()
+                    }
+                     else
+                    { addbuscar(id,flag) }
+                }
+            })
+           }
+           else
+           {
+               Swal.fire({
+                icon: 'error',
+                title: 'El DNI debe tener 8 digitos',
+                showConfirmButton: false,
+                timer: 900
+                        })
+           }
+   }
+$(document).on('keyup','#buscar-dni',function(event)
+{
+       if (event.keyCode === 13)
+       {
+           let dni=$('#buscar-dni').val();
+           flag=1
+           verificar(dni,flag)    
+       }
+})
+$(document).on('click','#buscar-cliente',function()
+{
+        let dni=$('#buscar-dni').val();
+        flag=1
+        verificar(dni,flag)  
+})
+$(document).on('click','#borrar-customer',function()
+{
+         var idc=$(this).attr('idcustomer');
+         console.log(idc);
+         Swal.fire({
+              title: '¿Desea eliminar al cliente?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Eliminar'
+                }).then((result) => {
+                  if (result.isConfirmed) 
+                  {
+                       $.ajax({
+                        type:'POST',
+                        url:'/Customer/DeleteCustomer',
+                        data:{id:idc},
+                        success:function(result)
+                        {
+                            console.log(result);
+                            if(result==true)
+                            {
+                                 Swal.fire({
+                                    icon: 'success',
+                                    title: 'Cliente eliminado',
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                    })
+                                window.location.reload();
+                            }
+                        } 
+                     })
+                  }
+                })
+})
+$(document).on('click','#cancelar',function()
+{limpiar();})
+ //abre modal con datos
+$(document).on('click','#editar-customer',function()
+{
+        var idcustomer=$(this).attr('idcustomer');
+        console.log(idcustomer)
+        $.ajax({
+        type:"Post",
+        url:"Customer/Index",
+        data:{id:idcustomer},
+        success:function(a)
+        {
+            console.log(a),
+            $('#update-dni').val(a.dnicustomer),
+            $('#update-nombre').val(a.namecustomer),
+            $('#update-apellidos').val(a.lastnamecustomer),
+            $('#update-telf').val(a.phonecustomer)
+        }
+        })
+          botonupdate.removeAttribute('disabled')
+})
+ //busca en reniec para actualizar
+$(document).on('click','#update-buscar',function()
+{ 
+        let dni=$('#update-buscar-dni').val();
+        flag=2
+        verificar(dni,flag)  
+})
+//guardar datos actualizados
+$(document).on('click','#actualizar-cliente',function()
+{        
+         var form=$('#form-update-cliente').serialize();
+         console.log($('#form-update-cliente').serializeArray());
+         $.ajax({
+             type:"POST",
+             url:'/Customer/UpdateCustomer',
+             data:form,
+             success:function(result)
+             {
+                  $('#editar-c').modal('hide');
+                  window.location.reload();
+             }
+         })
+})   
+$(document).ready( function () {
+   $('#tabla-customer').DataTable();
+} );
+</script>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+   
+} 
+

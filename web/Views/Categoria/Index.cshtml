@@ -1,0 +1,163 @@
+﻿@model web.Models.Categoria;
+@{
+    ViewData["Title"] = "Categorias";
+
+}
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#catadd" >Crear nueva</button>
+ 
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in ViewBag.ListaCategoria)
+        { 
+          <tr>
+           <td>@item.Catname</td>  
+             <td>
+               <button type="button" class="btn btn-success" idcategoria="@item.Idcategoria" id="b_editar" data-bs-toggle="modal" data-bs-target="#catedit">Editar</button>
+               <button type="button" class="btn btn-danger" onclick="mostrarID(@item.Idcategoria)" data-bs-toggle="modal" data-bs-target="#catdel">Eliminar</button>       
+             </td>
+          </tr> 
+        }
+    </tbody>
+</table>
+
+
+@*modales*@
+@*añadir categoria*@
+<div class="modal fade" id="catadd" role="dialog">
+    <div class="modal-dialog modal-s modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-action="SaveCategoria">
+                <div class="modal-header">
+                    <h2>Registrar nueva categoria</h2>
+                </div>
+
+                <div class="form-group">
+                    <input  asp-for="Catname" class="form-control"/>
+                    <span asp-validation-for="Catname" class="text-danger"></span>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cerrar</button>
+                    <button type="submit" class="btn btn-primary" >Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*borrar categoria*@
+<div class="modal fade" id="catdel" role="dialog">
+    <div class="modal-dialog modal-s modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post">
+                <div class="modal-header">
+                    <h2>¿Eliminar la categoria?</h2>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                    <button id="borrar" type="button" class="btn btn-primary" >Si</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*editar categoria*@
+<div class="modal fade" id="catedit" role="dialog">
+    <div class="modal-dialog modal-s modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post"  id="formulario">
+                <input type="hidden" id="valor" asp-for="Idcategoria"/>
+                <div class="modal-header">
+                    <h2>Actualizar categoria</h2>
+                </div>
+
+                <div class="form-group">
+                    <input  id="catname" asp-for="Catname" class="form-control"/>
+                    <span asp-validation-for="Catname" class="text-danger"></span>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cerrar</button>
+                    <button id="actualizado" type="button" class="btn btn-primary" >Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+ <script src="~/lib/jquery/dist/jquery.min.js"></script>
+ <script>
+     $(document).on('click','#actualizado',function()
+     {
+         var form=$('#formulario').serialize();
+         //var valorneo=$('#llenar').val();
+         console.log($('#formulario').serializeArray());
+         $.ajax({
+             type:"POST",
+             url:'/Categoria/EditCategoria',
+             data:form,
+             success:function(result)
+             {
+                  $('#catedit').modal('hide');
+                  window.location.reload();
+             }
+         })
+     })
+
+     $(document).on('click','#b_editar',function()
+     {
+         var idc=$(this).attr('idcategoria');
+          $('#valor').val(idc);
+         console.log(idc);
+         $.ajax({
+             type:"GET",
+             url:'/Categoria/Index',
+             data:{id:idc},
+             success:function(result)
+             {
+                 console.log(result);
+                 $('#catname').val(result.catname);
+             }
+         })
+     })
+     function mostrarID(id)
+     {
+          $('#valor').val(id);
+     }
+     $(document).on('click','#borrar',function()
+     {
+         var valordel=$('#valor').val();
+         $.ajax({
+            type:'POST',
+            url:'/Categoria/Delete',
+            data:{id:valordel},
+            success:function(result)
+            {
+                console.log(result);
+                if(result)
+                {
+                    
+                    $('#catdel').modal('hide');
+                    window.location.reload();
+                }
+            } 
+         })
+     })
+ </script>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+   
+} 
+
+
+
