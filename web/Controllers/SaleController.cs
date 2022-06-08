@@ -15,6 +15,16 @@ namespace web.Controllers
         {
             _context = context;
         }
+        public JsonResult Ver(int id)
+        {
+            var detalle = _context.Salesdetails.Where(p => p.IdSale == id).ToList();
+            return Json(detalle);
+        }
+        public JsonResult VerProducto(int id)
+        {
+            var detalle_producto = _context.Products.Where(p => p.Idproduct == id).ToList();
+            return Json(detalle_producto);
+        }
         public IActionResult Index(int? id)
         {
             if (id != null)
@@ -35,7 +45,7 @@ namespace web.Controllers
             if(id!= null)
             {
                 Sale sale = _context.Sales.Find(id);
-                sale.Borrado = false;
+                sale.Visibilidad = !sale.Visibilidad;
                 _context.Update(sale);
                 _context.SaveChanges();
                 return Json("hecho");
@@ -47,7 +57,7 @@ namespace web.Controllers
             }
                 
         }
-        public IActionResult llenar(int? id)
+        public IActionResult Crear(int? id)
         {
             ViewData["p"] = new SelectList(_context.Products.Where(s=>s.Cantidad>=5), "Idproduct", "Nameproduct");
             ViewData["c"] = new SelectList(_context.Customers, "Idcustomer", "Namecustomer");
@@ -63,14 +73,15 @@ namespace web.Controllers
         {
             bool estado = false;
 
-            Sale venta = new Sale 
-            { 
-                Total = ventaVM.Total, 
-                Comprobante = ventaVM.Comprobante, 
-                Estado = ventaVM.Estado, 
-                Idcustomer = ventaVM.Idcustomer, 
-                Items = ventaVM.Items, 
-                Borrado=ventaVM.Borrado
+            Sale venta = new Sale
+            {
+                Total = ventaVM.Total,
+                Comprobante = ventaVM.Comprobante,
+                Estado = ventaVM.Estado,
+                Idcustomer = ventaVM.Idcustomer,
+                Items = ventaVM.Items,
+                Visibilidad = ventaVM.Visibilidad,
+                Fecha = DateTime.Now
             };
 
             foreach (var i in ventaVM.Salesdetails)
@@ -83,6 +94,24 @@ namespace web.Controllers
             }
           
             _context.Add(venta);
+            _context.SaveChanges();
+            return Json(estado);
+        }
+        public JsonResult Ex(int id)
+        {
+            bool estado = false;
+            var iddetalle = _context.Salesdetails.Where(p => p.IdSale == id).ToList();
+            foreach (var i in iddetalle)
+            {
+                var idproducto = _context.Products.Find(i.IdProduct);
+                idproducto.Cantidad += i.Cantidad;
+                _context.Update(idproducto);
+                _context.Salesdetails.Remove(i);
+                _context.SaveChanges();
+                estado = true;
+            };
+            var idsale = _context.Sales.FirstOrDefault(s => s.IdSale == id);
+            _context.Sales.Remove(idsale);
             _context.SaveChanges();
             return Json(estado);
         }

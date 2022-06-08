@@ -1,38 +1,187 @@
-﻿@model IEnumerable<web.Models.Usuario>
+﻿@model web.Models.Usuario
 @{
     ViewData["Title"] = "Usuarios";
+    Layout = "~/Views/Shared/_principal.cshtml";
 }
- <p>
+
+@* <p>
      <a asp-action="Create">Crear</a>
- </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Documento</th>
-            <th>Telefono</th>
-            <th>Correo</th>
-            <th>Rol</th>
-            <th>opciones</th>
-        </tr>
-    </thead>
+ </p>*@
+ <button class="btn btn-primary" type="button" id="nuevoCliente" style="margin-bottom:10px; margin-top:10px">Crear</button>
+ <div class="container">
+  <div class="row">
+    <div class="col-12" id="tabla">
+        <table class="table table-striped">
+            <<thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Documento</th>
+                    <th>Telefono</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>opciones</th>
+                </tr>
+            </thead>
 
-    <tbody>
-        @foreach(var usuario in Model)
-        {
+            <tbody>
+                @foreach(var usuario in ViewBag.lista)
+                {
 
-            <tr>
-                <td>@Html.DisplayFor(p=>usuario.Name)</td>
-                <td>@Html.DisplayFor(p=>usuario.Dni)</td>
-                <td>@Html.DisplayFor(p=>usuario.Phone)</td>
-                <td>@Html.DisplayFor(p=>usuario.Correo)</td>
-                <td>@Html.DisplayFor(p=>usuario.Rol)</td>
-                 <td>
-                     <a asp-controller="Usuario" asp-action="Edit" asp-route-id=@usuario.Iduser>Editar</a>
-                     <a asp-controller="Usuario" asp-action="Delete" asp-route-id=@usuario.Iduser>Eliminar</a>
-                 </td>
-            </tr>
+                    <tr>
+                        <td>@usuario.Name</td>
+                        <td>@usuario.Dni</td>
+                        <td>@usuario.Phone</td>
+                        <td>@usuario.Correo</td>
+                        <td>@usuario.Rol</td>
+                         <td>
+                             @*<a asp-controller="Usuario" asp-action="ObtenerDatos" asp-route-id=@usuario.Iduser>Editar</a>
+                             <a asp-controller="Usuario" asp-action="ObtenerDatos" asp-route-id=@usuario.Iduser>Eliminar</a>*@
+                             <button id="obtener" type="button" class="btn btn-warning" iduser="@usuario.Iduser" onclick="FillId(@usuario.Iduser)">Editar</button>
+                         </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <div id="divCreate" style="backgroundcolor:red; border-left: solid black">
+        <h2 style="text-align:center" id="title">Ingresar usuario </h2>
+    <form id="formulario" method="post">
+           <input type="hidden" asp-for="Iduser" id="valorIdUser" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" id="InputName"/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Dni" class="control-label"></label>
+                <input type="number" asp-for="Dni" class="form-control" id="InputDni"/>
+                <span asp-validation-for="Dni" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input type="number" asp-for="Phone" class="form-control" id="InputPhone"/>
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+
+             <div class="form-group">
+                <label asp-for="Correo" class="control-label"></label>
+                <input type="email" asp-for="Correo" class="form-control" id="InputEmail"/>
+                <span asp-validation-for="Correo" class="text-danger"></span>
+            </div>
+             <div class="form-group">
+                <label asp-for="Rol" class="control-label"></label>
+                <select asp-for="Rol" class="form-control" >
+                      <option value="Administrador">Administrador</option>
+                      <option value="Asesor de Ventas">Asesor de Ventas</option>
+                      <option value="Recursos Humanos">Recursos Humanos</option>
+                      <option value="Otros">Otros</option>
+                </select>
+                <span asp-validation-for="Rol" class="text-danger"></span>
+            </div>
+
+             <div class="d-grid gap-2" style="margin-top:10px">
+              <button class="btn btn-outline-success" type="button" id="save">Guardar</button>
+              <button class="btn btn-outline-danger" type="button" id="cerrar">Cerrar</button>
+            </div>
+
+        </form>
+    </div>
+
+  </div>
+</div>
+ <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    var div=document.getElementById("divCreate")
+    div.style.display="none"
+    let estadoCrear=0
+    function FillId(id)
+    {
+        $('#valorIdUser').val(id)
+    }
+    function posiciones()
+    {
+        $("#tabla").removeClass('col-12').addClass('col-8');
+         div.style.display="block"
+        $('#divCreate').addClass('col-4'); 
+    }
+    $(document).on('click','#nuevoCliente',function()
+    {
+        estadoCrear=1
+        let titulo=document.getElementById('title')
+        titulo.innerHTML="Registrar usuario"
+        $('#InputName').val("")
+        $('#InputDni').val("")
+        $('#InputPhone').val("")
+        $('#InputEmail').val("")
+        posiciones()
+
+    })
+    $(document).on('click','#cerrar',function()
+    {
+         $('#divCreate').removeClass('col-4');
+         $("#tabla").removeClass('col-8').addClass('col-12');
+         div.style.display="none"
+    })
+    $(document).on('click','#obtener',function()
+    {
+        estadoCrear=2
+        let titulo=document.getElementById('title')
+        titulo.innerHTML="Modificar usuario"
+        posiciones()
+        var iduser=$(this).attr('iduser');
+        $.ajax({
+             type:"Get",
+             url:'/Usuario/ObtenerDatos',
+             data: {id:iduser},
+             success:function(result)
+             {
+                 $('#InputName').val(result.name)
+                 $('#InputDni').val(result.dni)
+                 $('#InputPhone').val(result.phone)
+                 $('#InputEmail').val(result.correo)
+             }
+        })
+    })
+   
+    $(document).on('click','#save',function()
+    {
+       var form=$('#formulario').serialize();
+        if (estadoCrear == 1) {
+            console.log($('#formulario').serializeArray());
+           $.ajax({
+             type:"Post",
+             url:'/Usuario/GuardarCliente',
+             data:form,
+             success:function(result)
+             {
+              if (result.estado = true) {
+                   window.location.reload();
+                 }  
+             }
+        })
         }
-    </tbody>
-</table>
+        else if(estadoCrear==2)
+        {
+           console.log($('#formulario').serializeArray());
+            $.ajax({
+             type:"Post",
+             url:'/Usuario/ModificarCliente',
+             data:form,
+             success:function(result)
+             {
+                 if (result.estado = true) {
+                      window.location.reload();
+                 }
+             }
+        })
+        }
+    })
 
+</script>

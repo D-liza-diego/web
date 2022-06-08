@@ -1,13 +1,15 @@
 ﻿@model web.Models.Categoria;
 @{
     ViewData["Title"] = "Categorias";
+      Layout = "~/Views/Shared/_principal.cshtml";
 
 }
+<br />
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#catadd" >Crear nueva</button>
+<button type="button" class="btn btn-outline-secondary" style="margin-bottom:10px" data-bs-toggle="modal" data-bs-target="#catadd" >Crear nueva</button>
  
-<table class="table table-bordered">
-    <thead>
+<table class="table table-sm" style="text-align: center;">
+      <thead class="table-dark">
         <tr>
             <th>Nombre</th>
             <th>Opciones</th>
@@ -97,7 +99,6 @@
      $(document).on('click','#actualizado',function()
      {
          var form=$('#formulario').serialize();
-         //var valorneo=$('#llenar').val();
          console.log($('#formulario').serializeArray());
          $.ajax({
              type:"POST",

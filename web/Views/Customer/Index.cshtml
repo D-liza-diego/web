@@ -1,100 +1,56 @@
 ﻿@model web.Models.Customer
 @{
     ViewData["Title"] = "Clientes";
+      Layout = "~/Views/Shared/_principal.cshtml";
 
 }
-     
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar-c" id="nuevo-cliente" >Registrar nuevo</button>
+<br />
+<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#add">Registrar nuevo</button>
 <br />
 <br />
 
 @if (Enumerable.Count(ViewBag.customers) > 0)
 {
-    <table class="table table-bordered table-resposinve-m" id="tabla-customer">
-    <thead>
+    <table class="table table-striped" id="tabla-customer"  style="text-align: center;">
+    <thead class="table-dark">
         <tr>
             <th>Documento</th>
             <th>Nombre</th>
             <th>Opciones</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody >
        @foreach(var item in  ViewBag.customers)
         {
             <tr>
                 <td>@item.Dnicustomer</td>
                 <td>@item.Namecustomer</td>
                 <td>
-                    <button idcustomer=@item.Idcustomer id="borrar-customer" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrar">Eliminar </button>
-                    <button idcustomer=@item.Idcustomer id="editar-customer" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editar-c">Editar </button>
+                    <button idcustomer=@item.Idcustomer id="borrar-customer" type="button" class="btn btn-danger">Eliminar </button>
+                    <button idcustomer=@item.Idcustomer id="edit-customer" type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editar"  onclick="mostrarID(@item.Idcustomer)"> Editar </button>
                 </td>
             </tr>
         }
 
     </tbody>
 </table>  
+
 }
 else
 {
-    <h1>No hay datos para mostrar</h1>
+    <div>
+        <h2> Aun no hay datos para mostrar
+             <i class="bi bi-search" style="font-size: 4rem;"></i>
+        </h2>
+    </div>
 }
  
-<div class="modal fade" id="editar-c" role="dialog">
+<div class="modal fade" id="add" role="dialog">
     <div class="modal-dialog modal-m modal-dialog-centered">
         <div class="modal-content">
             
-            <form id="form-update-cliente" method="post" asp-action="UpdateCustomer">
-                <div class="modal-header">
-
-                      <input  type="number" class="form-control" maxlength="8" placeholder="Ingresar dni" id="update-buscar-dni"/>
-                      <button type="button" class="btn btn-primary" id="update-buscar" >Editar</button>
-                      
-                    
-                </div>
-
-                <div class="modal-body">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                         <div class="form-group">
-                            <label asp-for="Dnicustomer" class="control-label"></label>
-                            <input asp-for="Dnicustomer" class="form-control" id="update-dni" readonly/>
-                            <span asp-validation-for="Dnicustomer" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label asp-for="Namecustomer" class="control-label"></label>
-                            <input asp-for="Namecustomer" class="form-control" id="update-nombre" readonly/>
-                            <span asp-validation-for="Namecustomer" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label asp-for="Lastnamecustomer" class="control-label"></label>
-                            <input  asp-for="Lastnamecustomer" class="form-control" id="update-apellidos" readonly/>
-                            <span asp-validation-for="Lastnamecustomer" class="text-danger"></span>
-                        </div>
-
-                         <div class="form-group">
-                            <label asp-for="Phonecustomer" class="control-label"></label>
-                            <input type="number"  asp-for="Phonecustomer" id="update-telf" class="form-control"/>
-                            <span  asp-validation-for="Phonecustomer" class="text-danger"></span>
-                        </div>
-           
-                </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                     <button type="button" class="btn btn-primary" id="actualizar-cliente"  disabled >Actualizar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="agregar-c" role="dialog">
-    <div class="modal-dialog modal-m modal-dialog-centered">
-        <div class="modal-content">
-            
-            <form id="formulario" method="post" asp-action="SaveCustomer">
+            <form  method="post" asp-action="SaveCustomer">
                 <div class="modal-header">
 
                       <input  type="number" class="form-control" maxlength="8" placeholder="Ingresar dni" id="buscar-dni"/>
@@ -141,17 +97,66 @@ else
     </div>
 </div>
 
+<div class="modal fade" id="editar" role="dialog">
+    <div class="modal-dialog modal-m modal-dialog-centered">
+        <div class="modal-content">
+              <div class="modal-header">
+
+                      <input  type="number" class="form-control" maxlength="8" placeholder="Ingresar dni" id="update-buscar-dni" />
+                      <button type="button" class="btn btn-primary" id="update-buscar" >Actualizar</button>
+                      
+                </div>
+            
+            <form id="update-form" method="post" >
+                <input type="hidden" id="id-customer" asp-for="Idcustomer"/>
+              
+                <div class="modal-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                         <div class="form-group">
+                            <label asp-for="Dnicustomer" class="control-label"></label>
+                            <input asp-for="Dnicustomer" class="form-control" id="u-dni" readonly/>
+                            <span asp-validation-for="Dnicustomer" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Namecustomer" class="control-label"></label>
+                            <input asp-for="Namecustomer" class="form-control" id="u-nombre" readonly/>
+                            <span asp-validation-for="Namecustomer" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Lastnamecustomer" class="control-label"></label>
+                            <input  asp-for="Lastnamecustomer" class="form-control" id="u-apellidos" readonly/>
+                            <span asp-validation-for="Lastnamecustomer" class="text-danger"></span>
+                        </div>
+
+                         <div class="form-group">
+                            <label asp-for="Phonecustomer" class="control-label"></label>
+                            <input type="number"  asp-for="Phonecustomer" id="u-telf" class="form-control"/>
+                            <span  asp-validation-for="Phonecustomer" class="text-danger"></span>
+                        </div>
+           
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                     <button type="button" class="btn btn-primary" id="update-customer" disabled  >Actualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="sweetalert2.all.min.js"></script>
 <script>
      var flag=0  
      const boton = document.getElementById("agregar");
-     const botonupdate=document.getElementById("actualizar-cliente");
+     const botonupdate=document.getElementById("update-customer");
+
  function limpiar()
-     {
+{
         $('#add-buscar-dni').val('');
         $('#add-dni').val('');
         $('#add-nombre').val('');
@@ -165,9 +170,14 @@ else
         $('#update-telf').val('');
         $('#span').html('');
         boton.setAttribute('disabled',true);
-     }
- function addbuscar(id,flag)
-     {
+}
+function mostrarID(id)
+{
+        $('#id-customer').val(id)
+        console.log( $('#id-customer').val())
+}
+function addbuscar(id,flag)
+{
          $.ajax({
          type:"Get",
          url:'https://dniruc.apisperu.com/api/v1/dni/'+id+'?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImRpZWdvMDNsaXphQGdtYWlsLmNvbSJ9.YMccp65gLQTDdT-ZQNg4uLBmX66IkI_854e6uC2Lglg',
@@ -199,21 +209,19 @@ else
                  }
                  if(flag=2)
                  {
-                     $('#update-dni').val(result.dni);
-                     $('#update-nombre').val(result.nombres);
-                     $('#update-apellidos').val(result.apellidoPaterno+" "+result.apellidoMaterno);
-                     $('#update-telf').val('')
+                     $('#u-dni').val(result.dni);
+                     $('#u-nombre').val(result.nombres);
+                     $('#u-apellidos').val(result.apellidoPaterno+" "+result.apellidoMaterno);
+                     $('#u-telf').val('')
                      botonupdate.removeAttribute('disabled'); 
                  }
-            
              }
              
          }
-
          })
-     }
- function verificar(id,flag)
-   {
+}
+function verificar(id,flag)
+{
        if(id.length==8)
            {
             $.ajax({
@@ -228,8 +236,7 @@ else
                             icon: 'error',
                             title: 'Cliente ya registrado',
                             showConfirmButton: false,
-                            timer: 1000
-                            })
+                            timer: 1000 })
                             limpiar()
                     }
                      else
@@ -243,10 +250,9 @@ else
                 icon: 'error',
                 title: 'El DNI debe tener 8 digitos',
                 showConfirmButton: false,
-                timer: 900
-                        })
+                timer: 900})
            }
-   }
+} 
 $(document).on('keyup','#buscar-dni',function(event)
 {
        if (event.keyCode === 13)
@@ -262,76 +268,28 @@ $(document).on('click','#buscar-cliente',function()
         flag=1
         verificar(dni,flag)  
 })
-$(document).on('click','#borrar-customer',function()
-{
-         var idc=$(this).attr('idcustomer');
-         console.log(idc);
-         Swal.fire({
-              title: '¿Desea eliminar al cliente?',
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Eliminar'
-                }).then((result) => {
-                  if (result.isConfirmed) 
-                  {
-                       $.ajax({
-                        type:'POST',
-                        url:'/Customer/DeleteCustomer',
-                        data:{id:idc},
-                        success:function(result)
-                        {
-                            console.log(result);
-                            if(result==true)
-                            {
-                                 Swal.fire({
-                                    icon: 'success',
-                                    title: 'Cliente eliminado',
-                                    showConfirmButton: false,
-                                    timer: 2000
-                                    })
-                                window.location.reload();
-                            }
-                        } 
-                     })
-                  }
-                })
-})
-$(document).on('click','#cancelar',function()
-{limpiar();})
- //abre modal con datos
-$(document).on('click','#editar-customer',function()
-{
-        var idcustomer=$(this).attr('idcustomer');
-        console.log(idcustomer)
+$(document).on('click','#edit-customer',function(){
+
+       var idcustomer=$(this).attr('idcustomer');
+       console.log(idcustomer)
+       
         $.ajax({
         type:"Post",
-        url:"Customer/Index",
+        url:"/Customer/Index",
         data:{id:idcustomer},
         success:function(a)
         {
-            console.log(a),
-            $('#update-dni').val(a.dnicustomer),
-            $('#update-nombre').val(a.namecustomer),
-            $('#update-apellidos').val(a.lastnamecustomer),
-            $('#update-telf').val(a.phonecustomer)
+            $('#u-dni').val(a.dnicustomer),
+            $('#u-nombre').val(a.namecustomer),
+            $('#u-apellidos').val(a.lastnamecustomer),
+            $('#u-telf').val(a.phonecustomer)
         }
         })
-          botonupdate.removeAttribute('disabled')
-})
- //busca en reniec para actualizar
-$(document).on('click','#update-buscar',function()
-{ 
-        let dni=$('#update-buscar-dni').val();
-        flag=2
-        verificar(dni,flag)  
-})
-//guardar datos actualizados
-$(document).on('click','#actualizar-cliente',function()
+}) 
+$(document).on('click','#update-customer',function()
 {        
-         var form=$('#form-update-cliente').serialize();
-         console.log($('#form-update-cliente').serializeArray());
+         var form=$('#update-form').serialize();
+         console.log($('#update-form').serializeArray());
          $.ajax({
              type:"POST",
              url:'/Customer/UpdateCustomer',
@@ -342,10 +300,80 @@ $(document).on('click','#actualizar-cliente',function()
                   window.location.reload();
              }
          })
-})   
-$(document).ready( function () {
-   $('#tabla-customer').DataTable();
-} );
+})
+$(document).on('click','#update-buscar',function()
+{ 
+        let dni=$('#update-buscar-dni').val();
+        flag=2
+        verificar(dni,flag)  
+})
+$(document).on('click','#borrar-customer',function()
+{ 
+    var idcustomer=$(this).attr('idcustomer');
+   
+       //Swal.fire({
+       //       title: '¿Desea eliminar?',
+       //       icon: 'warning',
+       //       showCancelButton: true,
+       //       confirmButtonColor: '#3085d6',
+       //       cancelButtonColor: '#d33',
+       //       confirmButtonText: 'Eliminar'
+       //         }).then((result) => {
+       //   if (result.isConfirmed) {
+       //        $.ajax({
+       //             type:'post',
+       //             url:'/Customer/DeleteCustomer',
+       //             data:{id:idcustomer},
+       //             success:function(result)
+       //             {
+       //                 console.log(result)
+                     
+       //                     Swal.fire({
+       //                     icon: 'success',
+       //                     title: 'Cliente Eliminado',
+       //                     showConfirmButton: false,
+       //                     timer: 2000 })
+       //                      window.location.reload();
+       //             }
+                   
+       //             })
+       //   }})
+
+       $.ajax({
+        type:'post',
+        url:'/Customer/Confirmar',
+        data:{id:idcustomer},
+        success:function(result)
+        {
+            if(result==false)
+            {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'EL CLIENTE TIENE UNA VENTA',
+                    showConfirmButton: false,
+                    timer: 2000
+                   
+                })
+            }
+            else
+            {
+                 Swal.fire({
+                    icon: 'success',
+                    title: 'Cliente Eliminado',
+                    showConfirmButton: false,
+                    })
+            }
+           setTimeout( ()=>
+           {
+               window.location.reload()
+           },2500);
+        }  
+       })
+   
+})
+
+
 </script>
 @section Scripts
 {

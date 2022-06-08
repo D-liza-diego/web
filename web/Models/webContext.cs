@@ -115,7 +115,7 @@ namespace web.Models
 
                 entity.Property(e => e.IdSale).HasColumnName("id_sale");
 
-                entity.Property(e => e.Borrado).HasColumnName("borrado");
+                entity.Property(e => e.Visibilidad).HasColumnName("visibilidad");
 
                 entity.Property(e => e.Comprobante)
                     .HasMaxLength(50)
@@ -130,6 +130,8 @@ namespace web.Models
                 entity.Property(e => e.Idcustomer).HasColumnName("idcustomer");
 
                 entity.Property(e => e.Items).HasColumnName("items");
+
+                entity.Property(e => e.Fecha).HasColumnName("fecha");
 
                 entity.Property(e => e.Total)
                     .HasColumnType("decimal(10, 2)")

@@ -16,8 +16,10 @@ namespace web.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Usuario> listausuario = _context.Usuarios;
-            return View(listausuario);
+            //IEnumerable<Usuario> listausuario = _context.Usuarios;
+            var list = _context.Usuarios.ToList();
+            ViewBag.lista = list;
+            return View();
         }
         public IActionResult Create()
         {
@@ -36,6 +38,25 @@ namespace web.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View();
+        }
+        public JsonResult ObtenerDatos(int id)
+        {
+            var datos = _context.Usuarios.Find(id);
+            return Json(datos);
+        }
+        public JsonResult GuardarCliente(Usuario usuario)
+        {
+            var estado = true;
+            _context.Usuarios.Add(usuario);
+            _context.SaveChanges();
+            return Json(estado);
+        }
+        public JsonResult ModificarCliente(Usuario usuario)
+        {
+            var estado = true;
+            _context.Usuarios.Update(usuario);
+            _context.SaveChanges();
+            return Json(estado);
         }
         public IActionResult Edit(int? id)
         {

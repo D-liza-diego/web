@@ -1,25 +1,174 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_principal.cshtml";
 }
+ <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Dashboard</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+    <div class="btn-group me-2">
+    <button type="button" class="btn btn-sm btn-outline-secondary" id="ventas" >Ventas</button>
+    <button type="button" class="btn btn-sm btn-outline-secondary" id="productos" >Productos</button>
+    </div>
+    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+    <span data-feather="calendar" class="align-text-bottom"></span>
+    This week
+    </button>
+    </div>
+ </div>
 
-<div class="text-center">
-    <h1 class="display-4">@ViewBag.x</h1>
-   
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@*<div class="row">
+    <div class="col-lg-6">
+        <div class="panel panel-default"> 
+            <div class="panel-heading"><b>Producto vendidos</b></div>
+            <div class="panel-body">
+                <canvas id="graficoProductos" width="100" height="50"></canvas>
+            </div>
+
+        </div>
+        
+    </div>
+
+     <div class="col-lg-6">
+        <div class="panel panel-default"> 
+            <div class="panel-heading"><b>Ventas al mes</b></div>
+            <div class="panel-body">
+                <canvas id="graficoVentas" width="100" height="50"></canvas>
+            </div>
+
+        </div>
+        
+    </div>
+</div>*@
+<div id="divVentas">
+    <canvas class="my-4 w-100" id="ChartVentas" width="900" height="380"></canvas>
 </div>
- <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script>
+<div class=" row" id="divProductos">
+    <div class="col-lg-5" >
+         <canvas class="my-4 w-100" id="ChartProductos" width="100" height="180"></canvas>
+    </div>
+    <div class="col-lg-5">
+
+    </div>
+</div>
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+<script> 
+    let divProductos= document.getElementById('divProductos')
+    let divVentas=document.getElementById('divVentas')
+    divProductos.style.display="none"
     
-        $.ajax({
-                type:'Get',
-                url:'/Home/Obtener',
-                success:function(result)
-                {
-                console.log(result);
-                } 
-                })
-         
-    
-   
-  
+$(document).on('click', '#productos', function() {
+    divVentas.style.display="none"
+    divProductos.style.display="block"
+})
+$(document).on('click', '#ventas', function() {
+     divProductos.style.display="none"
+    divVentas.style.display="block" 
+})
+
+$.ajax({
+    type:"Get",
+    url:'/Home/GraficoVentas',
+    success:function(result)
+    {
+        var arrayMes=[]
+        var arrayTotal=[]
+        for (let i = 0; i < result.length; i++) {
+        arrayMes.push(result[i].mes)
+        arrayTotal.push(result[i].total)}
+
+        const data = {
+         labels:arrayMes,
+          datasets: [
+            {
+              data: arrayTotal,
+              borderColor: '#007bff',
+              backgroundColor: 'transparent',
+            }
+          ]
+        };
+        const config = {
+          type: 'line',
+          data: data,
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                 display: false,
+              },
+              title: {
+                display: true,
+                text: 'Ventas al mes'
+              }
+            }
+          },
+        };
+         const myChart = new Chart(
+                document.getElementById('ChartVentas'),
+                config
+              );           
+   }
+})
+
+    $.ajax({
+    type:"GET",
+    url:'/Home/GraficoProductos',
+    success:function(result)
+    {
+            var arrayProductos=[]
+            var arrayColores=[]
+            var arrayCantidad=[]
+                for (let i = 0; i < result.length; i++) {
+                    let arraycolor=colorRandom()
+                    arrayProductos.push(result[i].producto)
+                    arrayCantidad.push(result[i].cantidad)
+                    arrayColores.push('rgb('+arraycolor[0]+','+arraycolor[1]+','+arraycolor[2]+')')
+                }
+
+                const data = {
+                labels: arrayProductos,
+                datasets: [{
+                  label: arrayProductos ,
+                  backgroundColor:arrayColores ,
+                  data:arrayCantidad ,
+                }]
+              };
+
+             const config = {
+                  type: 'doughnut',
+                  data: data,
+                  options: {
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        position: 'top',
+                      },
+                      title: {
+                        display: true,
+                        text: 'Productos vendidos'
+                      }
+                    }
+                  },
+                };
+              const myChart = new Chart(
+                document.getElementById('ChartProductos'),
+                config
+              );
+    }
+            })
+function colorRandom()
+{
+    let arrayRandom=[]
+    for (let i = 0; i < 3; i++)
+    {
+        let x =Math.floor(Math.random() * 255) + 1;
+        arrayRandom.push(x)
+    }
+    return arrayRandom
+}
 </script>
+
+

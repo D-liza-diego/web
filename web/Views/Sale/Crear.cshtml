@@ -1,5 +1,8 @@
-﻿
-<h1>Registrar venta</h1>
+﻿@{
+    ViewData["Title"] = "Ventas";
+    Layout = "~/Views/Shared/_principal.cshtml";
+}
+<h1 style="text-align:center">Registrar venta</h1>
 <style>
 .error {
 border-color:red;
@@ -12,9 +15,10 @@ color:white
     background-color:#F78837;
 }
 </style>
+<br />
 <form method="post"  asp-controller="Sale" asp-action="SaveSale" >
                 
-<div  class="form-group" id="padre">
+@*<div  class="form-group" id="padre">
 <div  class="form-group" id="hijo" >
 <label class="control-label">Seleccione Cliente</label>
 <select  id="itemcustomer"  name="IdCliente" class="form-control" asp-items="ViewBag.c"></select>
@@ -28,7 +32,7 @@ color:white
 
 <div class="form-group" id="hijo">
 <label class="control-label">Cantidad producto</label>
-<input id="cantidad" type="number" onkeypress="noEnter()"/>
+<input id="cantidad" type="number"/>
 </div>
 
 <div class="form-group" id="hijo">
@@ -36,7 +40,32 @@ color:white
 
 </div>
 
-</div> 
+</div> *@
+
+<div class="row g-3 align-items-center container" style="margin-bottom:10px;">
+  <div class="col-auto">
+   <label class="control-label">Cliente</label>
+  </div>
+  <div class="col-2">
+   <select  id="itemcustomer"  name="IdCliente" class="form-control" asp-items="ViewBag.c"></select>
+  </div>
+  <div class="col-auto">
+   <label class="control-label">Producto</label>
+  </div>
+  <div class="col-2">
+   <select  id="itemproduct"  class="form-control" asp-items="ViewBag.p"></select>
+  </div>
+  <div class="col-auto">
+   <label class="control-label">Cantidad</label>
+  </div>
+  <div class="col-auto">
+    <input id="cantidad" type="number"/>
+  </div>
+   <div class="col-auto">
+    <button id="carrito" type="button" class="btn btn-outline-success">Agregar al carrito </button>
+  </div>
+  
+</div>
 
 
 
@@ -78,8 +107,9 @@ color:white
     var coltotal=0;
     var cliente=document.getElementById('itemcustomer');
     var botonguardar=document.getElementById('prueba');
-  
-   
+    
+
+
 $(document).on('click','#carrito',function()
 {
 var encontrado=false
@@ -88,29 +118,28 @@ var cantidad= $('#cantidad').val();
 if(cantidad.length==0)
 {$('#cantidad').addClass('error');}
 else
-        {
-               
+{
                $('#cantidad').removeClass('error');
-                clearInterval(descontar)
-                $("#tabla > tbody > tr").each(function(index,tr)
-                {
+               clearInterval(descontar)
+               $("#tabla > tbody > tr").each(function(index,tr)
+               {
                  var x= parseInt($(this).find("td:eq(0)").html())
                      if (x==producto)
                      {encontrado=true
                        
                          $(this).closest('tr').addClass('repetido')
                      }
-                })              
-                if(!encontrado)
+               })              
+
+               if(!encontrado)
                 {
                      cliente.setAttribute('disabled', '');
                      $.ajax({
                      type:"Get",
-                      url:'/Sale/llenar',
+                     url:'/Sale/Crear',
                      data:{id:producto},
                      success:function(result)
                      {
-                         //console.log(result)
                          var total= parseInt($('#cantidad').val()) * parseFloat(result.precio)
                          $('.table tbody').append(
                                 $("<tr>").append(
@@ -120,21 +149,18 @@ else
                                     $("<td>").text(result.precio),
                                     $("<td>").text(total),
                                     $("<td>").html(" <button type='button' id='borrar' class='btn btn-danger'> Eliminar </button> <button type='button' id='edit' class='btn btn-warning'> Editar </button>")))
-                                    
                                     coltotal +=parseFloat(total);
-                                      //console.log(coltotal)
                      $('#total').html('TOTAL: S/.'+coltotal)
-                      $('#cantidad').val('');
-                      botonguardar.removeAttribute('disabled')
+                     $('#cantidad').val('');
+                     botonguardar.removeAttribute('disabled')
                      }
-             
-                 })
-                 
+                     })
                 }
-        }
+}
 })
-    $(document).on('click','#prueba',function()
-    {
+$(document).on('click','#prueba',function()
+{
+
         var detalle_venta=[];
         var total=0;
         
@@ -150,13 +176,14 @@ else
         })
         var tabla=document.getElementById("tabla");
         var totalRowCount = (tabla.rows.length)-1; 
+       
         var venta =
         {
             Total:total,
             Items:totalRowCount,
             Comprobante:"Boleta",
             Estado:"Pagado",
-            Borrado:true,
+            Visibilidad:true,
             Idcustomer:parseInt($('#itemcustomer').val()),
             Salesdetails:detalle_venta
 
@@ -175,9 +202,9 @@ else
             window.location.href="/Sale/Index"
         }
         })
-    })
-    $(document).on('keypress','#aumentar',function(event)
-    {
+})
+$(document).on('keypress','#aumentar',function(event)
+{
         var newValor=event.key
         if(!$.isNumeric(newValor))
         {
@@ -195,23 +222,24 @@ else
          event.preventDefault();
         }
 
-    })
-    $('.table tbody').on('click','#borrar',function()
-    {
+})
+$('.table tbody').on('click','#borrar',function()
+{
       var restar = $(this).closest('tr').find("td:eq(4)").html()
-      console.log(restar)
+      //console.log(restar)
       $(this).closest('tr').remove();
       coltotal-=restar
       $('#total').html('TOTAL: S/.'+coltotal)
-    })
+      verificar()
+})
 
-    $('.table tbody').on('click','#edit',function()
-    {
+$('.table tbody').on('click','#edit',function()
+{
        $(this).closest('tr').removeClass('repetido')
        $('#aumentar').addClass('repetido')
-    })
-    function obtener()
-    {
+})
+function obtener()
+{
         coltotal=0
           $("#tabla > tbody > tr").each(function(index,tr)
         {
@@ -219,10 +247,9 @@ else
             
         })
          $('#total').html('TOTAL: S/.'+coltotal)
-    }
-
-    function contador()
-    {
+}
+function contador()
+{
         var time=2;
          descontar=setInterval(function()
         {
@@ -238,10 +265,20 @@ else
            }
 
         },100);
-    }
-    $(document).on('keypress','#cantidad',function(event)
-    {
+}
+function verificar()
+{
+var filas  =  $('tbody').children().length
+if(filas==0)
+{
+    botonguardar.setAttribute("disabled","")
+     cliente.removeAttribute('disabled');
+
+}
+}
+$(document).on('keypress','#cantidad',function(event)
+{
              if (event.keyCode === 13)
              {event.preventDefault();}    
-    })
+})
 </script>

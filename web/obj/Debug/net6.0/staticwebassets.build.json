@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ue0pcf4muKbO9C8nwVRzLWVimm4QU/lsMv7o1aqmqEE=",
+  "Hash": "Ay/XGIMkC/27cTe6CrtGnHeqluEWC1SAMsKBPazd/t0=",
   "Source": "web",
   "BasePath": "_content/web",
   "Mode": "Default",
@@ -49,6 +49,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\Diego\\source\\repos\\web\\web\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\web.bundle.scp.css"
+    },
+    {
+      "Identity": "C:\\Users\\Diego\\source\\repos\\web\\web\\wwwroot\\css\\login.css",
+      "SourceId": "web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Diego\\source\\repos\\web\\web\\wwwroot\\",
+      "BasePath": "_content/web",
+      "RelativePath": "css/login.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\login.css"
+    },
+    {
+      "Identity": "C:\\Users\\Diego\\source\\repos\\web\\web\\wwwroot\\css\\principal.css",
+      "SourceId": "web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Diego\\source\\repos\\web\\web\\wwwroot\\",
+      "BasePath": "_content/web",
+      "RelativePath": "css/principal.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\principal.css"
     },
     {
       "Identity": "C:\\Users\\Diego\\source\\repos\\web\\web\\wwwroot\\css\\site.css",

@@ -16,8 +16,9 @@ namespace web.Models
         public string Comprobante { get; set; } = null!;
         public string Estado { get; set; } = null!;
         public int? Idcustomer { get; set; }
-        public bool? Borrado { get; set; }
-
+        public bool? Visibilidad { get; set; }
+        
+        public DateTime Fecha { get; set; }
         public virtual Customer? IdcustomerNavigation { get; set; }
         public virtual ICollection<Salesdetail> Salesdetails { get; set; }
     }

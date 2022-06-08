@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "03uMjvHa3umDUNmSKpJRJC6R7RhRbG5EX+u6BaCHov2VJjpBYwzu3QFE526oJaxtcxnIDYhaaMuJ7PwN96j/Zw==",
+  "dgSpecHash": "fXqrF38tiukIxQKQh1bHK0OEM6LdWud03SMbe/ki4hhg4E2c1hH0BVghl56W+SMN3cNyerGUMyelI/k0MbfUOA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Diego\\source\\repos\\web\\web\\web.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Diego\\.nuget\\packages\\chart.js\\3.7.1\\chart.js.3.7.1.nupkg.sha512",
     "C:\\Users\\Diego\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Diego\\.nuget\\packages\\messagepack\\2.1.152\\messagepack.2.1.152.nupkg.sha512",
     "C:\\Users\\Diego\\.nuget\\packages\\messagepack.annotations\\2.1.152\\messagepack.annotations.2.1.152.nupkg.sha512",

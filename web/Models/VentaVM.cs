@@ -7,7 +7,8 @@
         public string Comprobante { get; set; } = null!;
         public string Estado { get; set; } = null!;
         public int? Idcustomer { get; set; }
-        public bool? Borrado { get; set; } = null!;
+        public bool? Visibilidad { get; set; } = null!;
+      
         public List<Salesdetail> Salesdetails { get; set; }=null!;
     }
 }

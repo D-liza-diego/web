@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using web.Models;
+using web.Models.Reporte;
 
 namespace web.Controllers
 {
@@ -39,5 +40,24 @@ namespace web.Controllers
             ViewBag.x = HttpContext.Session.GetString("usuario");
             return Json(ViewBag.x);
         }
+        public JsonResult Reporte()
+        {
+            SP_productos x = new SP_productos();
+            List<producto_vendido> producto_Vendidos = x.RetonarProductos();
+            return Json(producto_Vendidos);
+        }
+        public JsonResult GraficoProductos()
+        {
+            SP_ProductoVendido procedimiento = new SP_ProductoVendido();
+            List<ProductoVendido> lista = procedimiento.RetonarProductos();
+            return Json(lista);
+        }
+        public JsonResult GraficoVentas()
+        {
+            SP_VentasMes procedimiento = new SP_VentasMes();
+            List<VentasMes> lista = procedimiento.RetonarVentas();
+            return Json(lista);
+        }
+
     }
 }

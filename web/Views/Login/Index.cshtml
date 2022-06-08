@@ -2,51 +2,120 @@
 @{
     Layout = null;
 }
-<title>Inicio de sesion</title>
-<head>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.98.0">
+    <title>Iniciar Session</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/practica.styles.css" asp-append-version="true" />
-</head>
-<style>
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button{
-        -webkit-appearance:none;
-    }
-</style>
-<div id="login">
-<form method="post" asp-action="Ingresar">
- <div class="centered">
-     <h2>Ingresar al sistema</h2>
- </div>
-                
-    <div >
-      <label asp-for="Name" class="control-label"></label>
-      <input id="name" asp-for="Name" class="form-control"/>
-      <span asp-validation-for="Name" class="text-danger"></span>
+    <link rel="stylesheet" href="~/web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/sign-in/">
+
+<link href="~/css/login.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @@media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+     input[type=number]::-webkit-inner-spin-button,
+     input[type=number]::-webkit-outer-spin-button{
+        -webkit-appearance:none;}
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+  </head>
+  <body class="text-center">
+    
+<main class="form-signin w-100 m-auto">
+  <form method="post" asp-action="Ingresar">
+    <h1 class="h3 fw-normal">Iniciar Session
+            <i class="bi bi-box-arrow-in-right" style="font-size: 2.5rem;"></i>
+    </h1>
+
+    <div class="form-floating">
+      <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com"  asp-for="Name">
+      <label for="floatingInput" asp-for="Name">Usuario</label>
+       <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-
-    <div  >
-      <label asp-for="Dni" class="control-label"></label>
-      <input  id="dni" asp-for="Dni" class="form-control"/>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword" placeholder="Password" asp-for="Dni">
+      <label for="floatingPassword" asp-for="Dni">Password</label>
       <span asp-validation-for="Dni" class="text-danger"></span>
-     </div>
-           <br /><br />
-     <div >
-      <button id="limpiar" type="button" class="btn btn-danger" >Limpiar</button>
-      <button type="submit" class="btn btn-primary" >Ingresar</button>
-      </div>
-</form>
- <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script>
-    $(document).on('click','#limpiar',function()
-    {
-         $("#dni").val('');
-         $("#name").val('');
-    })
+    </div>  
+    
+      
 
-</script>
-</div>
+    @*<div class="checkbox mb-3">
+      <label>
+        <input type="checkbox" value="remember-me"> Remember me
+      </label>
+    </div>*@
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Iniciar</button>
+    @*<p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>*@
+  </form>
+</main>
+
+
+    
+  </body>
+</html>
 @section Scripts
 {
     @{
