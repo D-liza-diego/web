@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using web.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,11 +14,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Login/Index";
         options.AccessDeniedPath = "/Home/Denegado";
     });
+
 builder.Services.AddDbContext<webContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("webContext"));
-}
-    );
+});
+builder.Services.AddControllers().AddJsonOptions(json =>
+{
+    json.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 
 var app = builder.Build();
 

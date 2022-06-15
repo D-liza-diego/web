@@ -17,7 +17,7 @@ namespace web.Controllers
         }
         public JsonResult Ver(int id)
         {
-            var detalle = _context.Salesdetails.Where(p => p.IdSale == id).ToList();
+            var detalle = _context.Salesdetails.Include(i=>i.IdProductNavigation).Where(p => p.IdSale == id).ToList();
             return Json(detalle);
         }
         public JsonResult VerProducto(int id)

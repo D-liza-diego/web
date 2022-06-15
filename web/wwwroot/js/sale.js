@@ -1,7 +1,7 @@
 ﻿
 $(document).on('click', '#ver', function () {
     var id = $(this).attr('idsale');
-
+    console.log(id)
     $('#modalDetalle').modal('show')
     let body = document.getElementById('body')
     body.innerHTML = ""
@@ -13,28 +13,35 @@ $(document).on('click', '#ver', function () {
         success: function (r) {
 
             for (let i of r) {
-                console.log(i)
-                $.ajax({
-                    type: "Get",
-                    url: "Sale/VerProducto",
-                    data: { id: i.idProduct },
-                    success: function (q) {
 
-                        for (let o of q) {
-                            body.innerHTML += `
-                            <tr>
-                            <td>${o.nameproduct}</td>
-                            <td>${i.cantidad}</td>
-                            <td>${i.precio}</td>
-                            </tr>
-                            `
-                        }
+                body.innerHTML += `
+                <tr>
+                 <td>${i.idProductNavigation.nameproduct}</td>
+                 <td>${i.cantidad}</td>
+                 <td>S/. ${i.precio}</td>
+                 <td>S/. ${i.precio*i.cantidad}</td> 
+                </tr>`
+                //$.ajax({
+                //    type: "Get",
+                //    url: "Sale/VerProducto",
+                //    data: { id: i.idProduct },
+                //    success: function (q) {
 
-                    }
-                })
+                //        for (let o of q) {
+                //            body.innerHTML += `
+                //            <tr>
+                //            <td>${o.nameproduct}</td>
+                //            <td>${i.cantidad}</td>
+                //            <td>${i.precio}</td>
+                //            </tr>
+                //            `
+                //        }
+
+                //    }
+                //})
             }
 
-
+            
         }
     })
 })
