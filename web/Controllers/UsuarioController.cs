@@ -17,7 +17,7 @@ namespace web.Controllers
         public IActionResult Index()
         {
             //IEnumerable<Usuario> listausuario = _context.Usuarios;
-            var list = _context.Usuarios.ToList();
+            var list = _context.Usuarios.Where(x=>x.Rol!="Administrador").ToList();
             ViewBag.lista = list;
             return View();
         }
