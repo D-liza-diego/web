@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using web.Models;
 using web.Models.Reporte;
@@ -9,11 +10,11 @@ namespace web.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly webContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(webContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -58,6 +59,35 @@ namespace web.Controllers
             List<VentasMes> lista = procedimiento.RetonarVentas();
             return Json(lista);
         }
+        public JsonResult productSold(int mes)
+        {
+            //var sp = _context.Salesdetails.Join(_context.Products, ventadetalle => ventadetalle.IdProduct, producto => producto.Idproduct, (ventadetalle, producto) => new { ventadetalle, producto })
+            //                                .Select(z => new { z.producto.Nameproduct, z.ventadetalle.Cantidad });
 
+            //var sp = from detalle in _context.Salesdetails
+            //         join producto in _context.Products on detalle.IdProduct equals producto.Idproduct
+            //         select new { producto.Nameproduct, detalle.Cantidad};
+
+            var sp = _context.Salesdetails.Include(x => x.IdProductNavigation).Include(a => a.IdSaleNavigation)
+                .Where(x => x.IdSaleNavigation.Fecha.Month == mes)
+                .GroupBy(x => x.IdProductNavigation.Nameproduct).
+                Select(x => new
+                {
+                    x.Key,
+                    Total = x.Select(y => y.Cantidad).Sum()
+                });
+
+            return Json(sp);
+        }
+        public JsonResult salesMade()
+        {
+            var sp = _context.Sales/*.Where(x => x.Fecha.Month == 6)*/.GroupBy(z => z.Fecha.Month).
+                Select(z => new
+                {
+                    z.Key,
+                    Total = z.Select(y => y.Total).Sum()
+                });
+            return Json(sp);
+        }
     }
 }

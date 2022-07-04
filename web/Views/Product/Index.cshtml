@@ -37,6 +37,7 @@
                 <td>
                     <button onclick="mostrar(@item.Idproduct)" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrar">Eliminar </button>
                     <button idproduct="@item.Idproduct" id="p_editar" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editar">Editar </button>
+                  
                 </td>
             </tr>
         }
@@ -67,13 +68,28 @@
                         <div class="form-group">
                             <label asp-for="Precio" class="control-label"></label>
                             <input id="llenar-p-precio" asp-for="Precio" class="form-control"/>
-                            <span asp-validation-for="Precio" class="text-danger"></span>
+                            
                         </div>
-                         <div class="form-group">
-                            <label asp-for="Cantidad" class="control-label"></label>
-                            <input  id="llenar-p-cantidad" asp-for="Cantidad" class="form-control"/>
-                            <span asp-validation-for="Cantidad" class="text-danger"></span>
+             
+                        <div class="form-group row">
+                            <div class="col-6">
+                             <label asp-for="Cantidad" class="control-label"></label>
+                             <input  id="llenar-p-cantidad" asp-for="Cantidad" class="form-control" disabled />
+                            </div>
+
+                            <div class="col-6">
+
+                             <div class="form-check form-switch" style="margin-top:30px;margin-right:50px">
+                              <input class="form-check-input center" type="checkbox" id="flexSwitchCheckDefault" onchange="cambiar()"  >
+                              <label class="form-check-label" for="flexSwitchCheckDefault">Aumentar stock</label>
+                            </div>
+
+                            </div>
+
+                            
                         </div>
+                 
+                           <span  class="text-danger" hidden id="span" style="margin-left: 25%;"></span>
 
                          <div class="form-group">
                             <label asp-for="Idcategoria" class="control-label"></label>
@@ -84,8 +100,9 @@
                 </div>
                 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cerrar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="cerrar()">cerrar</button>
                      <button id ="p_actualizar" type="button" class="btn btn-primary" >Actualizar</button>
+                      
                 </div>
             </form>
         </div>

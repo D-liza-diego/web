@@ -15,6 +15,7 @@ namespace web.Controllers
         {
             _context = context;
         }
+    
         public IActionResult Index(int? id)
         {
             if (id == null)
@@ -30,6 +31,11 @@ namespace web.Controllers
                 return Json(p);
             }
 
+        }
+        public JsonResult CantidadVerificar(int id )
+        {
+            var produ = _context.Products.Include(p => p.IdcategoriaNavigation).Where(w=>w.Idproduct==id).Select(d=>d.Cantidad).ToList();
+            return Json(produ);
         }
         [HttpPost]
         public IActionResult SaveProduct(Product product)
