@@ -67,27 +67,58 @@ namespace web.Controllers
             //var sp = from detalle in _context.Salesdetails
             //         join producto in _context.Products on detalle.IdProduct equals producto.Idproduct
             //         select new { producto.Nameproduct, detalle.Cantidad};
+            
+            var fechaCheck = _context.Sales.Where(w => w.Fecha.Month == mes).Any();
+            if (!fechaCheck)
+            {
+                var filtro = _context.Salesdetails.Include(x => x.IdProductNavigation).Include(a => a.IdSaleNavigation)
+                .GroupBy(x => x.IdProductNavigation.Nameproduct).
+                Select(x => new
+                {
+                    Producto = x.Key,
+                    Total = x.Select(y => y.Cantidad).Sum()
+                }); 
+                var arrayFalse = new { data= filtro, fechaCheck };
+                return Json(arrayFalse);
+            }
+           
 
-            var sp = _context.Salesdetails.Include(x => x.IdProductNavigation).Include(a => a.IdSaleNavigation)
+            var filtroMes = _context.Salesdetails.Include(x => x.IdProductNavigation).Include(a => a.IdSaleNavigation)
                 .Where(x => x.IdSaleNavigation.Fecha.Month == mes)
                 .GroupBy(x => x.IdProductNavigation.Nameproduct).
                 Select(x => new
                 {
-                    x.Key,
+                    Mes = x.Select(y => y.IdSaleNavigation.Fecha.Month),
+                    Producto = x.Key,
                     Total = x.Select(y => y.Cantidad).Sum()
                 });
+            var arrayTrue = new { data= filtroMes, fechaCheck };
+            return Json(arrayTrue);
 
-            return Json(sp);
         }
-        public JsonResult salesMade()
+        public JsonResult salesMade(int mes)
         {
-            var sp = _context.Sales/*.Where(x => x.Fecha.Month == 6)*/.GroupBy(z => z.Fecha.Month).
+            var fechaCheck = _context.Sales.Where(w => w.Fecha.Month == mes).Any();
+            if(!fechaCheck)
+            {
+                var filtro = _context.Sales.GroupBy(z => z.Fecha.Month).
                 Select(z => new
                 {
-                    z.Key,
+                    Fecha = z.Key,
                     Total = z.Select(y => y.Total).Sum()
                 });
-            return Json(sp);
+                var arrayFalse = new { data = filtro, fechaCheck };
+                return Json(arrayFalse);
+            }
+
+            var filtroMes = _context.Sales.Where(x => x.Fecha.Month == mes).GroupBy(z => z.Fecha.Month).
+                Select(z => new
+                {
+                    Fecha = z.Key,
+                    Total = z.Select(y => y.Total).Sum()
+                });
+            var arrayTrue = new { data = filtroMes, fechaCheck };
+            return Json(arrayTrue);
         }
     }
 }
