@@ -10,7 +10,7 @@
 <br />
 <br />
 
-@if (Enumerable.Count(ViewBag.customers) > 0)
+@if (Enumerable.Count(ViewBag.Registros) > 0)
 {
     <table class="table table-striped" id="tabla-customer"  style="text-align: center;">
     <thead class="table-dark">
@@ -21,11 +21,11 @@
         </tr>
     </thead>
     <tbody >
-       @foreach(var item in  ViewBag.customers)
+       @foreach(var item in  ViewBag.Registros)
         {
             <tr>
                 <td>@item.Dnicustomer</td>
-                <td>@item.Namecustomer</td>
+                <td style="text-transform:uppercase">@item.Namecustomer @item.Lastnamecustomer</td>
                 <td>
                     <button idcustomer=@item.Idcustomer id="borrar-customer" type="button" class="btn btn-danger">Eliminar </button>
                     <button idcustomer=@item.Idcustomer id="edit-customer" type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editar"  onclick="mostrarID(@item.Idcustomer)"> Editar </button>
@@ -45,7 +45,46 @@ else
         </h2>
     </div>
 }
- 
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-end">
+        @{
+            int numerosPaginas = ViewBag.NumeroPaginas ;
+            int actualPagina =ViewBag.PaginaActual;
+            int i;
+            if(actualPagina>1)
+            {
+                int pre = actualPagina - 1;
+                <li class="page-item">
+                <a class="page-link" href="?page=@pre" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            }
+            for(i=1; i<= numerosPaginas; i++)
+            {
+                if(i==actualPagina)
+                { 
+                    <li class="page-item"><a class="page-link" href="?page=@i" >@i</a></li>
+                }
+                else
+                { <li class="page-item"><a class="page-link" href="?page=@i" >@i</a></li>}
+            }
+            if(actualPagina>1 && actualPagina<numerosPaginas)
+            {
+                int post = actualPagina + 1;
+                <li class="page-item">
+                    <a class="page-link" href="?page=@post" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+    }
+  </ul>
+</nav>
+
+
 <div class="modal fade" id="add" role="dialog">
     <div class="modal-dialog modal-m modal-dialog-centered">
         <div class="modal-content">

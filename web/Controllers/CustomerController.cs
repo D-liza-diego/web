@@ -14,19 +14,31 @@ namespace web.Controllers
             _context = context;
         }
 
-        public IActionResult Index(int? id)
+        public IActionResult Index(int? id, int? page)
         {
-            if(id!=null)
+            if (id != null)
             {
                 var valores = _context.Customers.Find(id);
                 return Json(valores);
             }
+            if (page>0)
+            {
+                page = page;
+            }
             else
             {
-                var clientes = _context.Customers;
-                ViewBag.customers = clientes;
-                return View();
+                page = 1;
             }
+            int RegistrosPagina = 10;
+            int RegistrosOmitidos = (int)(page - 1) * RegistrosPagina;
+            int RegistrosTotales = _context.Customers.Count();
+            float NumeroPaginas =  ((float)RegistrosTotales / RegistrosPagina);
+            var registros = _context.Customers.OrderBy(s => s.Idcustomer).Skip(RegistrosOmitidos).Take(RegistrosPagina);
+            ViewBag.TotalClientes = RegistrosTotales;
+            ViewBag.PaginaActual = page;
+            ViewBag.NumeroPaginas = (int) Math.Ceiling(NumeroPaginas);
+            ViewBag.Registros = registros;
+            return View();
         }
         [HttpPost]
         public IActionResult SaveCustomer(Customer customer)
