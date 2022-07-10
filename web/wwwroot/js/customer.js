@@ -2,6 +2,11 @@
 const boton = document.getElementById("agregar");
 const botonupdate = document.getElementById("update-customer");
 
+$("#filtro").on('keyup', function () {
+    var value = $(this).val()
+    var data= buscar(value,data)
+})
+
 function limpiar() {
     $('#add-buscar-dni').val('');
     $('#add-dni').val('');

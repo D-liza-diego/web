@@ -9,10 +9,10 @@
 <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#add">Registrar nuevo</button>
 <br />
 <br />
-
+<input class="form-control justify-content-end" type="text" placeholder="Filtrar" id="filtro"/>
 @if (Enumerable.Count(ViewBag.Registros) > 0)
 {
-    <table class="table table-striped" id="tabla-customer"  style="text-align: center;">
+    <table class="table table-striped" id="tabla"  style="text-align: center;">
     <thead class="table-dark">
         <tr>
             <th>Documento</th>
@@ -34,7 +34,7 @@
         }
 
     </tbody>
-</table>  
+    </table>  
 
 }
 else

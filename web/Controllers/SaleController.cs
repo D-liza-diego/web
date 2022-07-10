@@ -61,6 +61,8 @@ namespace web.Controllers
         {
             ViewData["p"] = new SelectList(_context.Products.Where(s=>s.Cantidad>=5), "Idproduct", "Nameproduct");
             ViewData["c"] = new SelectList(_context.Customers, "Idcustomer", "Namecustomer");
+            ViewBag.clientes = _context.Customers.OrderBy(e => e.Idcustomer);
+            ViewBag.productos = _context.Products.Include(o=>o.IdcategoriaNavigation).OrderBy(e => e.Idproduct);
             if (id != null)
             {
                 var dato_producto = _context.Products.Find(id);

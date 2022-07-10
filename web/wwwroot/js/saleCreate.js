@@ -1,38 +1,70 @@
-﻿var descontar
-var coltotal = 0;
-var cliente = document.getElementById('itemcustomer');
-var botonguardar = document.getElementById('prueba');
+﻿var coltotal = 0;
+var registroCliente = $('#tablaCliente tbody tr');
+var registroProducto = $('#tablaProduct tbody tr');
+var botonguardar = document.getElementById('guardarVenta');
+$('#filtroCliente').keyup(function () {
+    var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
 
+    registroCliente.show().filter(function () {
+        var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+        return !~text.indexOf(val);
+    }).hide();
+});
+$('#filtroProducto').keyup(function () {
+    var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
 
-
-$(document).on('click', '#carrito', function () {
-    var encontrado = false
-    var producto = $('#itemproduct').val()
-    var cantidad = $('#cantidad').val();
-    if (cantidad.length == 0) { $('#cantidad').addClass('error'); }
+    registroProducto.show().filter(function () {
+        var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+        return !~text.indexOf(val);
+    }).hide();
+});
+$('#tablaCliente tbody tr').click(function () {
+    var nombreCliente = ($(this).find("td:eq(2)").text())
+    var idCliente = ($(this).find("td:eq(0)").text())
+    $('#inputClienteName').val(nombreCliente)
+    $('#inputClienteId').val(idCliente)
+    $('#ModalClientes').modal('hide');
+})
+$('#tablaProducto tbody tr').click(function () {
+    var nombreProducto = ($(this).find("td:eq(1)").text())
+    var idProducto = ($(this).find("td:eq(0)").text())
+    $('#inputProductoName').val(nombreProducto)
+    $('#inputProductoId').val(idProducto)
+    $('#ModalProductos').modal('hide');
+})
+$('#carrito').on('click', function () {
+    
+    var productoRepetido = false
+    var idproducto = $('#inputProductoId').val() 
+    var cantidad = $('#cantidad').val()
+    var productName = $('#inputProductoName').val()
+    var clienteName = $('#inputClienteName').val() 
+    if (productName.length == 0 || cantidad.length == 0 || clienteName.length ==0) {
+        $('#cantidad').addClass('error');
+        $("#inputProductoName").addClass('error');
+        $("#inputClienteName").addClass('error');
+    }
     else {
         $('#cantidad').removeClass('error');
-        clearInterval(descontar)
-        $("#tabla > tbody > tr").each(function (index, tr) {
-            var x = parseInt($(this).find("td:eq(0)").html())
-            if (x == producto) {
-                encontrado = true
-
+        $("#inputProductoName").removeClass('error');
+        $("#inputClienteName").removeClass('error');
+        $("#tablaCarrito > tbody > tr").each(function () {
+            var idProductTable = parseInt($(this).find("td:eq(0)").html())
+            if (idProductTable == idproducto) {
+                productoRepetido = true
                 $(this).closest('tr').addClass('repetido')
             }
         })
-
-        if (!encontrado) {
-            cliente.setAttribute('disabled', '');
+        if (!productoRepetido) {
             $.ajax({
                 type: "Get",
                 url: '/Sale/Crear',
-                data: { id: producto },
+                data: { id: idproducto },
                 success: function (result) {
                     var total = parseInt($('#cantidad').val()) * parseFloat(result.precio)
-                    $('.table tbody').append(
+                    $('#tablaCarrito tbody').append(
                         $("<tr>").append(
-                            $("<td>").text(result.idproduct),
+                            $("<td hidden>").text(result.idproduct),
                             $("<td>").text(result.nameproduct),
                             $("<td>").html('<div id="aumentar" contenteditable="true">' + cantidad + '</div>'),
                             $("<td>").text(result.precio),
@@ -40,28 +72,27 @@ $(document).on('click', '#carrito', function () {
                             $("<td>").html(" <button type='button' id='borrar' class='btn btn-danger'> Eliminar </button> <button type='button' id='edit' class='btn btn-warning'> Editar </button>")))
                     coltotal += parseFloat(total);
                     $('#total').html('TOTAL: S/.' + coltotal)
-                    $('#cantidad').val('');
+                    cantidad.length == 0;
                     botonguardar.removeAttribute('disabled')
                 }
             })
         }
     }
+   
 })
-$(document).on('click', '#prueba', function () {
-
+$('#guardarVenta').on('click', function () {
     var detalle_venta = [];
     var total = 0;
-
-    $("#tabla > tbody > tr").each(function (index, tr) {
+    $("#tablaCarrito > tbody > tr").each(function () {
         detalle_venta.push(
             {
-                IdProduct: parseInt($(tr).find("td:eq(0)").text()),
-                Cantidad: parseInt($(tr).find("td:eq(2)").text()),
-                Precio: parseFloat($(tr).find("td:eq(3)").text()),
+                IdProduct: parseInt($(this).find("td:eq(0)").text()),
+                Cantidad: parseInt($(this).find("td:eq(2)").text()),
+                Precio: parseFloat($(this).find("td:eq(3)").text()),
             })
-        total = total + parseFloat($(tr).find("td:eq(4)").text())
+        total = total + parseFloat($(this).find("td:eq(4)").text())
     })
-    var tabla = document.getElementById("tabla");
+    var tabla = document.getElementById("tablaCarrito");
     var totalRowCount = (tabla.rows.length) - 1;
 
     var venta =
@@ -71,12 +102,10 @@ $(document).on('click', '#prueba', function () {
         Comprobante: "Boleta",
         Estado: "Pagado",
         Visibilidad: true,
-        Idcustomer: parseInt($('#itemcustomer').val()),
+        Idcustomer: parseInt($('#inputClienteId').val()),
         Salesdetails: detalle_venta
 
     }
-    console.log(venta)
-
     $.ajax({
         type: "POST",
         url: '/Sale/Save',
@@ -84,7 +113,6 @@ $(document).on('click', '#prueba', function () {
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
-            console.log(data)
             window.location.href = "/Sale/Index"
         }
     })
@@ -100,54 +128,35 @@ $(document).on('keypress', '#aumentar', function (event) {
             obtener();
             $(this).find("td:eq(2)").addClass('repetido')
             botonguardar.removeAttribute('disabled')
-        }
-
-        event.preventDefault();
+        }event.preventDefault();
     }
 
 })
-$('.table tbody').on('click', '#borrar', function () {
-    var restar = $(this).closest('tr').find("td:eq(4)").html()
-    //console.log(restar)
+
+$('#tablaCarrito tbody').on('click', '#borrar', function () {
+    var valorRestado = $(this).closest('tr').find("td:eq(4)").html()
     $(this).closest('tr').remove();
-    coltotal -= restar
+    coltotal -= valorRestado
     $('#total').html('TOTAL: S/.' + coltotal)
     verificar()
 })
-
-$('.table tbody').on('click', '#edit', function () {
+$('#tablaCarrito tbody').on('click', '#edit', function () {
     $(this).closest('tr').removeClass('repetido')
     $('#aumentar').addClass('repetido')
 })
+function verificar() {
+    var filas = $('#tablaCarrito tbody').children().length
+    if (filas == 0) {
+        botonguardar.setAttribute("disabled", true)
+        cliente.removeAttribute('disabled');
+    }
+}
 function obtener() {
     coltotal = 0
-    $("#tabla > tbody > tr").each(function (index, tr) {
-        coltotal += parseFloat($(tr).find("td:eq(4)").text())
-
+    $("#tablaCarrito > tbody > tr").each(function () {
+        coltotal += parseFloat($(this).find("td:eq(4)").text())
     })
     $('#total').html('TOTAL: S/.' + coltotal)
-}
-function contador() {
-    var time = 2;
-    descontar = setInterval(function () {
-        --time;
-        if (time == 0) {
-            $('#cantidad').addClass('error');
-            time = 2
-        }
-        if (time == 1) {
-            $('#cantidad').removeClass('error');
-        }
-
-    }, 100);
-}
-function verificar() {
-    var filas = $('tbody').children().length
-    if (filas == 0) {
-        botonguardar.setAttribute("disabled", "")
-        cliente.removeAttribute('disabled');
-
-    }
 }
 $(document).on('keypress', '#cantidad', function (event) {
     if (event.keyCode === 13) { event.preventDefault(); }

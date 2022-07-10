@@ -17,65 +17,148 @@ color:white
 </style>
 <br />
 <form method="post"  asp-controller="Sale" asp-action="SaveSale" >
-                
-<div class="row g-3 align-items-center container" style="margin-bottom:10px;">
-  <div class="col-auto">
-   <label class="control-label">Cliente</label>
-  </div>
-  <div class="col-2">
-   <select  id="itemcustomer"  name="IdCliente" class="form-control" asp-items="ViewBag.c"></select>
-  </div>
-  <div class="col-auto">
-   <label class="control-label">Producto</label>
-  </div>
-  <div class="col-2">
-   <select  id="itemproduct"  class="form-control" asp-items="ViewBag.p"></select>
-  </div>
-  <div class="col-auto">
-   <label class="control-label">Cantidad</label>
-  </div>
-  <div class="col-auto">
-    <input id="cantidad" type="number"/>
-  </div>
-   <div class="col-auto">
-    <button id="carrito" type="button" class="btn btn-outline-success">Agregar al carrito </button>
-  </div>
-  
-</div>
+             
+   
+    <div class="container row align-items-center ">
+        <div class="col">
+             <label class="control-label">Cliente</label>
+             <input  id="inputClienteId" hidden  />
+             <input  id="inputClienteName" data-bs-toggle="modal" data-bs-target="#ModalClientes"  />
+        </div>
+        <div class="col">
+             <label class="control-label">Producto</label>
+             <input  id="inputProductoId" hidden  />
+             <input id="inputProductoName" data-bs-toggle="modal" data-bs-target="#ModalProductos" />
+        </div>
+        <div class="col">
+             <label class="control-label">Cantidad</label>
+             <input id="cantidad" type="number"/>
+        </div>
+        <div class="col justify-content-center">
+             <button id="carrito" type="button" class="btn btn-outline-success form-control">Agregar </button>
+        </div>
+    </div>
 
+    <div id="divtabla">
 
+        <table id="tablaCarrito" style="text-align: center;" class="table table-bordered table-resposinve-sm ">
 
- 
-<div id="divtabla">
+            <thead style="text-align: center;">
+                <tr style="background-color:black">
+                    <th hidden>Codigo</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Total</th>
+                    <th>Operacion</th>
+                </tr>
+            </thead>
 
-<table id="tabla" style="text-align: center;" class="table table-bordered table-resposinve-sm ">
+            <tbody > </tbody>
+        </table>
 
-<thead style="text-align: center;">
-<tr style="background-color:black">
-<th>Codigo</th>
-<th>Producto</th>
-<th>Cantidad</th>
-<th>Precio</th>
-<th>Total</th>
-<th>Ops</th>
-</tr>
-</thead>
+    </div>
 
-<tbody >
-
-</tbody>
-
-</table>
-
-</div>
-<b id="total" style="float:right">TOTAL: S/.0</b>
-    <br />
-<button id="prueba" style="float:right" type="button" class="btn btn-success" disabled >Guardar venta</button>
+    <b id="total" style="float:right">TOTAL: S/.0</b>
+        <br />
+    <button id="guardarVenta" style="float:right" type="button" class="btn btn-success" disabled >Confirmar venta</button>
 
 </form>
+
+<div class="modal" tabindex="-1" id="ModalClientes">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Listado clientes</h5>
+      </div>
+      <div class="modal-body">
+            <div class="row justify-content-center">
+                <div class="col-4 align-self-center">
+                     <label class="control-label" >Buscar cliente</label>
+                </div>
+                <div class="col-4">
+                    <input class="form-control" placeholder="Filtrar" id="filtroCliente" type="text"/>
+                </div>
+            </div>
+
+            <table class="table table-striped align-middle>" id="tablaCliente"  style="text-align: center;">
+            <thead class="table-dark">
+                <tr>
+                    <th hidden>id</th>
+                    <th>Documento</th>
+                    <th>Nombre</th>
+                </tr>
+            </thead>
+            <tbody >
+                @foreach(var item in  ViewBag.clientes)
+                {
+                    <tr>
+                        <td hidden>@item.Idcustomer</td>
+                        <td>@item.Dnicustomer</td>
+                        <td style="text-transform:uppercase">@item.Namecustomer @item.Lastnamecustomer</td>
+                    </tr>
+                }
+            </tbody>
+            </table>  
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" tabindex="-1" id="ModalProductos">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title ">Listado productos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <div class="row justify-content-center">
+                <div class="col-4 align-self-center">
+                     <label class="control-label" >Buscar producto</label>
+                </div>
+                <div class="col-4">
+                    <input class="form-control" placeholder="Filtrar" id="filtroProducto" type="text"/>
+                </div>
+            </div>
+            <table class="table table-striped align-middle>" id="tablaProducto"  style="text-align: center;">
+                <thead class="table-dark">
+                    <tr>
+                        <th hidden>Codigo</th>
+                        <th>Nombre</th>
+                        <th>Categoria</th>
+                    </tr>
+                </thead>
+                <tbody >
+                   @foreach(var item in  ViewBag.productos)
+                    {
+                        <tr>
+                            <td hidden>@item.Idproduct</td>
+                            <td style="text-transform:uppercase">@item.Nameproduct</td>
+                            <td style="text-transform:uppercase">@item.IdcategoriaNavigation.Catname</td>
+                        </tr>
+                    }
+                </tbody>
+             </table>  
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/saleCreate.js" asp-append-version="true"></script>
  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  
+
 </script>
