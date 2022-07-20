@@ -37,13 +37,19 @@
         <div class="modal-content">
             <form method="post" asp-action="SaveCategoria">
                 <div class="modal-header">
-                    <h2>Registrar nueva categoria</h2>
+                    <h2>Registrar categoria</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                         <div class="form-group">
+                            <label asp-for="Catname" class="control-label"></label>
+                            <input  asp-for="Catname" class="form-control"/>
+                            <span asp-validation-for="Catname" class="text-danger"></span>
+                         </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <input  asp-for="Catname" class="form-control"/>
-                    <span asp-validation-for="Catname" class="text-danger"></span>
-                </div>
+               
                 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cerrar</button>
@@ -80,10 +86,14 @@
                 <div class="modal-header">
                     <h2>Actualizar categoria</h2>
                 </div>
-
-                <div class="form-group">
-                    <input  id="catname" asp-for="Catname" class="form-control"/>
-                    <span asp-validation-for="Catname" class="text-danger"></span>
+                <div class="modal-body">
+                    <div class="container">
+                         <div class="form-group">
+                            <label asp-for="Catname" class="control-label"></label>
+                            <input  id="catname"  asp-for="Catname" class="form-control"/>
+                            <span asp-validation-for="Catname" class="text-danger"></span>
+                         </div>
+                    </div>
                 </div>
                 
                 <div class="modal-footer">

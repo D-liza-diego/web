@@ -40,15 +40,24 @@ namespace web.Controllers
         [HttpPost]
         public IActionResult SaveProduct(Product product)
         {
-            var llenado = new Product()
+            var guardar = new Product()
             {
                 Idproduct = product.Idproduct,
                 Nameproduct = product.Nameproduct,
                 Precio = product.Precio,
                 Idcategoria = product.Idcategoria,
-                Cantidad=product.Cantidad
+                Cantidad=product.Cantidad,
+                
             };
-            _context.Add(llenado);
+            _context.Add(guardar);
+            _context.SaveChanges();
+            var productID = guardar.Idproduct;
+            Product producto = _context.Products.Find(productID);
+            if (productID < 10) { producto.Codigo = "P000" + productID; }
+            if (productID > 10 && productID <100 ) { producto.Codigo = "P00" + productID; }
+            if (productID > 100 && productID < 1000) { producto.Codigo = "P0" + productID; }
+            if (productID > 1000 && productID < 10000) { producto.Codigo = "P" + productID; }
+            _context.Update(producto);
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -71,6 +80,7 @@ namespace web.Controllers
             var actualizado = new Product()
             {
                 Idproduct = product.Idproduct,
+                Codigo= product.Codigo,
                 Nameproduct = product.Nameproduct,
                 Precio = product.Precio,
                 Idcategoria = product.Idcategoria,

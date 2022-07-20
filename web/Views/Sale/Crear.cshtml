@@ -34,6 +34,10 @@ color:white
              <label class="control-label">Cantidad</label>
              <input id="cantidad" type="number"/>
         </div>
+        <div class="col">
+              <label  class="control-label">Tipo de comprobante</label>
+              <select id="comprobante" class="form-control" asp-items="ViewBag.tipoComprobante"></select>
+        </div>
         <div class="col justify-content-center">
              <button id="carrito" type="button" class="btn btn-outline-success form-control">Agregar </button>
         </div>
@@ -62,7 +66,6 @@ color:white
     <b id="total" style="float:right">TOTAL: S/.0</b>
         <br />
     <button id="guardarVenta" style="float:right" type="button" class="btn btn-success" disabled >Confirmar venta</button>
-
 </form>
 
 <div class="modal" tabindex="-1" id="ModalClientes">
@@ -72,35 +75,38 @@ color:white
         <h5 class="modal-title">Listado clientes</h5>
       </div>
       <div class="modal-body">
-            <div class="row justify-content-center">
-                <div class="col-4 align-self-center">
-                     <label class="control-label" >Buscar cliente</label>
-                </div>
-                <div class="col-4">
-                    <input class="form-control" placeholder="Filtrar" id="filtroCliente" type="text"/>
-                </div>
-            </div>
+          <div class="container">
+              <div class="form-group row">
+                   <div class="col-4 align-self-center">
+                        <label class="control-label" >Buscar cliente</label>
+                   </div>
+                   <div class="col-8">
+                        <input class="form-control" placeholder="Filtrar" id="filtroCliente" type="text"/>
+                   </div>
+              </div>
 
-            <table class="table table-striped align-middle>" id="tablaCliente"  style="text-align: center;">
-            <thead class="table-dark">
-                <tr>
-                    <th hidden>id</th>
-                    <th>Documento</th>
-                    <th>Nombre</th>
-                </tr>
-            </thead>
-            <tbody >
-                @foreach(var item in  ViewBag.clientes)
-                {
-                    <tr>
-                        <td hidden>@item.Idcustomer</td>
-                        <td>@item.Dnicustomer</td>
-                        <td style="text-transform:uppercase">@item.Namecustomer @item.Lastnamecustomer</td>
-                    </tr>
-                }
-            </tbody>
-            </table>  
-        
+               <div class="form-group">
+                    <table class="table table-striped align-middle>" id="tablaCliente"  style="text-align: center;">
+                        <thead class="table-dark">
+                            <tr>
+                                <th hidden>id</th>
+                                <th>Documento</th>
+                                <th>Nombre</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            @foreach(var item in  ViewBag.clientes)
+                            {
+                                <tr>
+                                    <td hidden>@item.Idcustomer</td>
+                                    <td>@item.Dnicustomer</td>
+                                    <td style="text-transform:uppercase">@item.Namecustomer @item.Lastnamecustomer</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>  
+               </div>
+          </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -118,35 +124,43 @@ color:white
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-            <div class="row justify-content-center">
-                <div class="col-4 align-self-center">
-                     <label class="control-label" >Buscar producto</label>
+           <div class="contaier">
+                <div class="form-group row">
+                   <div class="col-4 align-self-center">
+                        <label class="control-label" >Buscar cliente</label>
+                   </div>
+                   <div class="col-8">
+                        <input class="form-control" placeholder="Filtrar" id="filtroProducto"  type="text"/>
+                   </div>
                 </div>
-                <div class="col-4">
-                    <input class="form-control" placeholder="Filtrar" id="filtroProducto" type="text"/>
+                <div class="form-group">
+                    <table class="table table-striped align-middle>" id="tablaProducto"  style="text-align: center;">
+                        <thead class="table-dark">
+                            <tr>
+                                <th hidden>id</th>
+                                <th>Codigo</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Disponible</th>
+                                <th>Categoria</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                           @foreach(var item in  ViewBag.productos)
+                            {
+                                <tr>
+                                    <td hidden>@item.Idproduct</td>
+                                    <td>@item.Codigo</td>
+                                    <td style="text-transform:uppercase">@item.Nameproduct</td>
+                                    <td>@item.Precio</td>
+                                    <td>@item.Cantidad</td>
+                                    <td style="text-transform:uppercase">@item.IdcategoriaNavigation.Catname</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>  
                 </div>
-            </div>
-            <table class="table table-striped align-middle>" id="tablaProducto"  style="text-align: center;">
-                <thead class="table-dark">
-                    <tr>
-                        <th hidden>Codigo</th>
-                        <th>Nombre</th>
-                        <th>Categoria</th>
-                    </tr>
-                </thead>
-                <tbody >
-                   @foreach(var item in  ViewBag.productos)
-                    {
-                        <tr>
-                            <td hidden>@item.Idproduct</td>
-                            <td style="text-transform:uppercase">@item.Nameproduct</td>
-                            <td style="text-transform:uppercase">@item.IdcategoriaNavigation.Catname</td>
-                        </tr>
-                    }
-                </tbody>
-             </table>  
-
-
+           </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

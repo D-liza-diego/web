@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace web.Models
 {
@@ -12,8 +11,7 @@ namespace web.Models
         }
 
         public int Idcategoria { get; set; }
-        [Display(Name = "Nombre de la categoria")]
-        public string Catname { get; set; } = null!;
+        public string Catname { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
     }

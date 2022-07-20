@@ -19,6 +19,7 @@
  <table class="table table-resposinve-m" id="tabla">
     <thead class="table-dark">
         <tr>
+            <th>Codigo</th>
             <th>Nombre</th>
             <th>Precio</th>
             <th>Cantidad</th>
@@ -30,9 +31,10 @@
         @foreach(var item in  ViewBag.lista)
         {
             <tr>
+                <td>@item.Codigo</td>
                 <td>@item.Nameproduct</td>
                 <td>S/. @item.Precio</td>
-                <td>@item.Cantidad</td>
+                <td>@item.Cantidad unidades</td>
                 <td>@item.IdcategoriaNavigation.Catname</td> 
                 <td>
                     <button onclick="mostrar(@item.Idproduct)" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrar">Eliminar </button>
@@ -56,8 +58,13 @@
                     <h2>Editar producto</h2>
                 </div>
                 
-                <div class="modal-body">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="modal-body ">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="container">
+                        <div class="form-group">
+                            <label asp-for="Codigo" class="control-label"></label>
+                            <input id="llenar-p-codigo" asp-for="Codigo" class="form-control" disabled/>
+                        </div>
 
                         <div class="form-group">
                             <label asp-for="Nameproduct" class="control-label"></label>
@@ -65,44 +72,36 @@
                             <span asp-validation-for="Nameproduct" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group row">
+                            <div class="col-4">
                             <label asp-for="Precio" class="control-label"></label>
                             <input id="llenar-p-precio" asp-for="Precio" class="form-control"/>
-                            
-                        </div>
-             
-                        <div class="form-group row">
-                            <div class="col-6">
+                            </div>
+
+                            <div class="col-4">
                              <label asp-for="Cantidad" class="control-label"></label>
                              <input  id="llenar-p-cantidad" asp-for="Cantidad" class="form-control" disabled />
                             </div>
 
-                            <div class="col-6">
-
-                             <div class="form-check form-switch" style="margin-top:30px;margin-right:50px">
-                              <input class="form-check-input center" type="checkbox" id="flexSwitchCheckDefault" onchange="cambiar()"  >
-                              <label class="form-check-label" for="flexSwitchCheckDefault">Aumentar stock</label>
+                            <div class="col-2">
+                                 <div class="form-check form-switch" style="margin-top:30px;margin-right:50px">
+                                  <input class="form-check-input center" type="checkbox" id="flexSwitchCheckDefault" onchange="cambiar()"  >
+                                  <label class="form-check-label" for="flexSwitchCheckDefault">Aumentar stock</label>
+                                </div>
                             </div>
-
-                            </div>
-
-                            
                         </div>
-                 
-                           <span  class="text-danger" hidden id="span" style="margin-left: 25%;"></span>
-
-                         <div class="form-group">
+                        <span  class="text-danger" hidden id="span" style="margin-left: 25%;"></span>
+                        <div class="form-group">
                             <label asp-for="Idcategoria" class="control-label"></label>
                             <select id="llenar-p-cat"asp-for="Idcategoria" class="form-control" asp-items="ViewBag.x"></select>
                             <span asp-validation-for="Idcategoria" class="text-danger"></span>
                         </div>
-           
+                    </div>
                 </div>
                 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="cerrar()">cerrar</button>
-                     <button id ="p_actualizar" type="button" class="btn btn-primary" >Actualizar</button>
-                      
+                    <button id ="p_actualizar" type="button" class="btn btn-primary" >Actualizar</button>  
                 </div>
             </form>
         </div>
@@ -150,7 +149,7 @@
                 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cerrar</button>
-                     <button type="submit" class="btn btn-primary" >Agregar</button>
+                     <button  type="submit" class="btn btn-primary" >Agregar</button>
                 </div>
             </form>
         </div>

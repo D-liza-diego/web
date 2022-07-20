@@ -11,7 +11,7 @@ namespace web.Models
         public int? IdSale { get; set; }
         public int? IdProduct { get; set; }
 
-        public virtual Product? IdProductNavigation { get; set; }
-        public virtual Sale? IdSaleNavigation { get; set; }
+        public virtual Product IdProductNavigation { get; set; }
+        public virtual Sale IdSaleNavigation { get; set; }
     }
 }

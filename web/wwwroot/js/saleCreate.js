@@ -1,10 +1,9 @@
 ﻿var coltotal = 0;
 var registroCliente = $('#tablaCliente tbody tr');
-var registroProducto = $('#tablaProduct tbody tr');
+var registroProducto = $('#tablaProducto tbody tr');
 var botonguardar = document.getElementById('guardarVenta');
 $('#filtroCliente').keyup(function () {
     var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
-
     registroCliente.show().filter(function () {
         var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
         return !~text.indexOf(val);
@@ -12,7 +11,6 @@ $('#filtroCliente').keyup(function () {
 });
 $('#filtroProducto').keyup(function () {
     var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
-
     registroProducto.show().filter(function () {
         var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
         return !~text.indexOf(val);
@@ -32,6 +30,7 @@ $('#tablaProducto tbody tr').click(function () {
     $('#inputProductoId').val(idProducto)
     $('#ModalProductos').modal('hide');
 })
+
 $('#carrito').on('click', function () {
     
     var productoRepetido = false
@@ -39,7 +38,7 @@ $('#carrito').on('click', function () {
     var cantidad = $('#cantidad').val()
     var productName = $('#inputProductoName').val()
     var clienteName = $('#inputClienteName').val() 
-    if (productName.length == 0 || cantidad.length == 0 || clienteName.length ==0) {
+    if (productName.length == 0 || cantidad.length == 0 || clienteName.length ==0 || cantidad<0 || cantidad % 1 !=0) {
         $('#cantidad').addClass('error');
         $("#inputProductoName").addClass('error');
         $("#inputClienteName").addClass('error');
@@ -99,10 +98,10 @@ $('#guardarVenta').on('click', function () {
     {
         Total: total,
         Items: totalRowCount,
-        Comprobante: "Boleta",
         Estado: "Pagado",
         Visibilidad: true,
         Idcustomer: parseInt($('#inputClienteId').val()),
+        IdComprobante :$('#comprobante').val(),
         Salesdetails: detalle_venta
 
     }
@@ -112,7 +111,7 @@ $('#guardarVenta').on('click', function () {
         data: JSON.stringify(venta),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
-        success: function (data) {
+        success: function () {
             window.location.href = "/Sale/Index"
         }
     })

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "/8Msr63nOEBTcC9aOOj/3ZyO3aot4Z6mZv7iSSuvho8=",
+  "Hash": "3s7zlR8ORCtQqc7/WhPyA5ZPEVhPmyD5CpfQA9ksKb8=",
   "Source": "web",
   "BasePath": "_content/web",
   "Mode": "Default",
@@ -168,6 +168,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\graficos.js"
+    },
+    {
+      "Identity": "C:\\Users\\Diego\\source\\repos\\web\\web\\wwwroot\\js\\pdf.js",
+      "SourceId": "web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Diego\\source\\repos\\web\\web\\wwwroot\\",
+      "BasePath": "_content/web",
+      "RelativePath": "js/pdf.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\pdf.js"
     },
     {
       "Identity": "C:\\Users\\Diego\\source\\repos\\web\\web\\wwwroot\\js\\product.js",

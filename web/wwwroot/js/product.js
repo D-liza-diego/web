@@ -13,6 +13,8 @@ $("#tabla > tbody > tr").each(function (index, tr) {
 
 $(document).on('click', '#p_actualizar', function () {
     var idp = $('#p_editar').attr('idproduct');
+    var inputCantidad = document.getElementById('llenar-p-cantidad')
+    var inputCodigo = document.getElementById('llenar-p-codigo')
     $.ajax({
         type: 'POST',
         url: '/Product/CantidadVerificar',
@@ -21,15 +23,17 @@ $(document).on('click', '#p_actualizar', function () {
 
             if ($('#llenar-p-cantidad').val() >= result)
             {
-
+                inputCantidad.removeAttribute('disabled');
+                inputCodigo.removeAttribute('disabled');
                 var form = $('#p-form').serialize();
-                //var valorneo=$('#llenar').val();
-                console.log($('#p-form').serializeArray());
+                /*console.log($('#p-form').serializeArray());*/
                 $.ajax({
                     type: "POST",
                     url: '/Product/EditProduct',
                     data: form,
-                    success: function (result) {
+                    success: function () {
+                        inputCantidad.setAttribute('disabled', true);
+                        inputCodigo.setAttribute('disabled', true);
                         $('#editar').modal('hide');
                         window.location.reload();
                     }
@@ -56,7 +60,8 @@ $(document).on('click', '#p_editar', function () {
         url: '/Product/Index',
         data: { id: idp },
         success: function (result) {
-           /* console.log(result);*/
+            /* console.log(result);*/
+            $('#llenar-p-codigo').val(result.codigo);
             $('#llenar-p-name').val(result.nameproduct);
             $('#llenar-p-precio').val(result.precio);
             $('#llenar-p-cantidad').val(result.cantidad);
